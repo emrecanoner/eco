@@ -18,11 +18,22 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: settings?.title || "Portfolio",
     description: settings?.description || "Personal portfolio website",
-    icons: settings?.favicon ? {
-      icon: settings.favicon,
-      shortcut: settings.favicon,
-      apple: settings.favicon,
-    } : undefined,
+    icons: settings?.favicon ? [
+      {
+        rel: "icon",
+        url: settings.favicon,
+        type: "image/x-icon",
+      },
+      {
+        rel: "shortcut icon",
+        url: settings.favicon,
+        type: "image/x-icon",
+      },
+      {
+        rel: "apple-touch-icon",
+        url: settings.favicon,
+      },
+    ] : undefined,
   };
 }
 

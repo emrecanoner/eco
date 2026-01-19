@@ -12,7 +12,7 @@ export function BlogList({ posts }: BlogListProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-8">
       {posts.map((post, index) => (
         <BlogCard key={post.id} post={post} index={index} />
       ))}
