@@ -4,7 +4,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 interface ContactCardProps {
-  type: "email" | "twitter" | "github" | "linkedin";
   icon: React.ReactNode;
   label: string;
   href: string;
