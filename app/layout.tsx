@@ -15,26 +15,24 @@ const inter = Inter({
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings();
   
-  return {
+  const metadata: Metadata = {
     title: settings?.title || "Portfolio",
     description: settings?.description || "Personal portfolio website",
-    icons: settings?.favicon ? [
-      {
-        rel: "icon",
-        url: settings.favicon,
-        type: "image/x-icon",
-      },
-      {
-        rel: "shortcut icon",
-        url: settings.favicon,
-        type: "image/x-icon",
-      },
-      {
-        rel: "apple-touch-icon",
-        url: settings.favicon,
-      },
-    ] : undefined,
   };
+
+  if (settings?.favicon) {
+    metadata.icons = {
+      icon: [
+        { url: settings.favicon, type: "image/x-icon" },
+        { url: settings.favicon, sizes: "32x32", type: "image/png" },
+        { url: settings.favicon, sizes: "16x16", type: "image/png" },
+      ],
+      shortcut: settings.favicon,
+      apple: settings.favicon,
+    };
+  }
+
+  return metadata;
 }
 
 export default function RootLayout({
