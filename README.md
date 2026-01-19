@@ -59,6 +59,12 @@ NOTION_BOOKS_DB=xxx
 CRON_SECRET=your-secret-token-here
 ```
 
+**Note**: `CRON_SECRET` is a security token you need to generate yourself. You can generate it using:
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+Or use any secure random string generator (minimum 32 characters).
+
 ### 4. Notion Database Schema
 
 #### Settings Database
@@ -117,27 +123,57 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Deployment
 
-### Vercel
+For detailed deployment guide, see [DEPLOYMENT.md](./DEPLOYMENT.md).
 
-1. Push your code to GitHub
-2. Import the project in Vercel
-3. Add environment variables in Vercel dashboard
-4. Deploy
+### Quick Start (Vercel)
 
-The cron job is configured to run every 6 hours to sync data from Notion. You can adjust the schedule in `vercel.json`.
+1. **Push to GitHub**
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit"
+   git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+   git push -u origin main
+   ```
+
+2. **Import to Vercel**
+   - Go to [vercel.com](https://vercel.com)
+   - Sign in with GitHub
+   - "Add New Project" → Select your repository
+   - Click "Import"
+
+3. **Add Environment Variables**
+   Add the following environment variables in Vercel dashboard:
+   ```
+   NOTION_API_KEY=secret_xxx
+   NOTION_SETTINGS_DB=xxx
+   NOTION_PROFILE_DB=xxx
+   NOTION_BLOG_DB=xxx
+   NOTION_MOVIES_DB=xxx
+   NOTION_BOOKS_DB=xxx
+   CRON_SECRET=your-secret-token-here
+   ```
+   
+   **Note**: `CRON_SECRET` is a security token you need to generate yourself. See [DEPLOYMENT.md](./DEPLOYMENT.md) for generation methods.
+
+4. **Deploy**
+   - Click "Deploy" button
+   - Wait for the build to complete
+
+### Cron Job
+
+Cron job runs automatically once daily at 6:00 PM (18:00) UTC to sync data from Notion. You can adjust the schedule in `vercel.json`.
 
 ### Manual Sync
 
-You can manually trigger a sync by calling:
+Manuel sync için:
 
 ```bash
+# POST endpoint
 POST /api/notion/sync
 Authorization: Bearer YOUR_CRON_SECRET
-```
 
-Or via Vercel Cron:
-
-```bash
+# Veya GET endpoint (Vercel Cron)
 GET /api/cron?token=YOUR_CRON_SECRET
 ```
 
