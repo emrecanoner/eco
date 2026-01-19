@@ -10,7 +10,7 @@ export async function GET() {
       return NextResponse.json({ title: "Portfolio" }, { status: 200 });
     }
     return NextResponse.json({ title: settings.title || "Portfolio" });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ title: "Portfolio" }, { status: 200 });
   }
 }

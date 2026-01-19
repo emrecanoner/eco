@@ -1,4 +1,5 @@
 import { Client } from "@notionhq/client";
+import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { NOTION_API_VERSION } from "./constants";
 
 if (!process.env.NOTION_API_KEY) {
@@ -9,12 +10,28 @@ export const notionClient = new Client({
   auth: process.env.NOTION_API_KEY,
 });
 
+type NotionFilter = {
+  property?: string;
+  select?: { equals?: string };
+  rich_text?: { equals?: string };
+  [key: string]: unknown;
+};
+
+type NotionSort = {
+  property?: string;
+  direction?: "ascending" | "descending";
+  [key: string]: unknown;
+};
+
 export async function queryDatabase(
   databaseId: string,
-  filter?: any,
-  sorts?: any[]
-) {
-  const requestBody: any = {};
+  filter?: NotionFilter,
+  sorts?: NotionSort[]
+): Promise<PageObjectResponse[]> {
+  const requestBody: {
+    filter?: NotionFilter;
+    sorts?: NotionSort[];
+  } = {};
   if (filter) requestBody.filter = filter;
   if (sorts) requestBody.sorts = sorts;
   

@@ -2,7 +2,6 @@
 
 import { Profile } from "@/lib/utils/types";
 import { motion } from "framer-motion";
-import Link from "next/link";
 
 interface ContactProps {
   profile: Profile;
@@ -17,7 +16,7 @@ const socialIcons: Record<string, { label: string }> = {
 
 export function Contact({ profile }: ContactProps) {
   const socialLinks = Object.entries(profile.socialLinks).filter(
-    ([_, url]) => url
+    ([, url]) => url
   );
 
   return (

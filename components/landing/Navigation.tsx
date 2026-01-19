@@ -35,7 +35,7 @@ export function Navigation() {
           const data = await response.json();
           setSiteTitle(data.title || "Portfolio");
         }
-      } catch (error) {
+      } catch {
         // Keep default title
       }
     }

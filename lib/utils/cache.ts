@@ -6,7 +6,7 @@ const CACHE_DIR = join(process.cwd(), ".cache");
 export async function ensureCacheDir() {
   try {
     await mkdir(CACHE_DIR, { recursive: true });
-  } catch (error) {
+  } catch {
     // Directory might already exist
   }
 }
@@ -17,7 +17,7 @@ export async function getCachedData<T>(key: string): Promise<T | null> {
     const filePath = join(CACHE_DIR, `${key}.json`);
     const data = await readFile(filePath, "utf-8");
     return JSON.parse(data) as T;
-  } catch (error) {
+  } catch {
     return null;
   }
 }

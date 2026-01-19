@@ -14,7 +14,7 @@ function renderBlocks(blocks: BlockObjectResponse[]): React.ReactNode {
   let currentList: BlockObjectResponse[] = [];
   let listType: "bulleted" | "numbered" | null = null;
 
-  blocks.forEach((block, index) => {
+  blocks.forEach((block) => {
     if (block.type === "bulleted_list_item") {
       if (listType !== "bulleted") {
         if (currentList.length > 0) {

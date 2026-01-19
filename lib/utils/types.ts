@@ -1,3 +1,8 @@
+import type {
+  BlockObjectResponse,
+  PartialBlockObjectResponse,
+} from "@notionhq/client/build/src/api-endpoints";
+
 export interface Profile {
   name: string;
   title: string;
@@ -18,7 +23,7 @@ export interface BlogPost {
   id: string;
   title: string;
   slug: string;
-  content: any;
+  content: (BlockObjectResponse | PartialBlockObjectResponse)[] | null;
   publishedDate: string;
   status: "published" | "draft";
   excerpt?: string;

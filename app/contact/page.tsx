@@ -19,7 +19,7 @@ export default function ContactPage() {
           const data = await response.json();
           setProfile(data);
         }
-      } catch (error) {
+      } catch {
         // Error handled silently
       } finally {
         setLoading(false);

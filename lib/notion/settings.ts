@@ -31,7 +31,7 @@ export async function getSettings(): Promise<Settings | null> {
 
     await setCachedData(cacheKey, settings);
     return settings;
-  } catch (error) {
+  } catch {
     return null;
   }
 }

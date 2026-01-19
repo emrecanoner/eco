@@ -25,7 +25,7 @@ export async function getBooks(): Promise<Book[]> {
       ]
     );
 
-    const books: Book[] = results.map((page: any) => ({
+    const books: Book[] = results.map((page) => ({
       id: page.id,
       title: extractProperty(page, NOTION_PROPERTIES.TITLE, "title") || "",
       author: extractProperty(page, NOTION_PROPERTIES.AUTHOR, "rich_text") || "",

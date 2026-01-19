@@ -25,7 +25,7 @@ export async function getMovies(): Promise<Movie[]> {
       ]
     );
 
-    const movies: Movie[] = results.map((page: any) => {
+    const movies: Movie[] = results.map((page) => {
       const typeValue = extractProperty(page, NOTION_PROPERTIES.TYPE, "select")?.toLowerCase() || "movie";
       return {
         id: page.id,

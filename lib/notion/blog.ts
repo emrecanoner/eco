@@ -3,6 +3,7 @@ import { BlogPost } from "@/lib/utils/types";
 import { getCachedData, setCachedData } from "@/lib/utils/cache";
 import { extractProperty } from "./utils";
 import { NOTION_PROPERTIES } from "./constants";
+import type { BlockObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
 export async function getBlogPosts(): Promise<BlogPost[]> {
   const cacheKey = "blog-posts";
@@ -31,7 +32,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
     );
 
     const posts: BlogPost[] = await Promise.all(
-      results.map(async (page: any) => {
+      results.map(async (page) => {
         const post: BlogPost = {
           id: page.id,
           title: extractProperty(page, NOTION_PROPERTIES.TITLE, "title") || "",
@@ -40,7 +41,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
           status: (extractProperty(page, NOTION_PROPERTIES.STATUS, "select") || "draft") as "published" | "draft",
           excerpt: extractProperty(page, NOTION_PROPERTIES.EXCERPT, "rich_text") || undefined,
           coverImage: extractProperty(page, NOTION_PROPERTIES.COVER_IMAGE, "url") || undefined,
-          content: null,
+          content: null as BlockObjectResponse[] | null,
         };
         return post;
       })
@@ -59,12 +60,25 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
   }
 
   try {
-    const results = await queryDatabase(process.env.NOTION_BLOG_DB, {
-      property: NOTION_PROPERTIES.SLUG,
-      rich_text: {
-        equals: slug,
-      },
-    });
+    const results = await queryDatabase(
+      process.env.NOTION_BLOG_DB,
+      {
+        and: [
+          {
+            property: NOTION_PROPERTIES.SLUG,
+            rich_text: {
+              equals: slug,
+            },
+          },
+          {
+            property: NOTION_PROPERTIES.STATUS,
+            select: {
+              equals: "published",
+            },
+          },
+        ],
+      }
+    );
 
     if (results.length === 0) return null;
 
