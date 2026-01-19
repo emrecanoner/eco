@@ -13,7 +13,6 @@ export const NOTION_PROPERTIES = {
   LINKEDIN: "LinkedIn",
   TWITTER: "Twitter",
   WEBSITE: "Website",
-  AVATAR: "Avatar",
   
   // Blog
   SLUG: "Slug",

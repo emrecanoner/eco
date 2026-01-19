@@ -85,7 +85,6 @@ Or use any secure random string generator (minimum 32 characters).
 - **LinkedIn** (URL)
 - **Twitter** (URL)
 - **Website** (URL)
-- **Avatar** (URL)
 
 #### Blog Database
 - **Title** (Title)

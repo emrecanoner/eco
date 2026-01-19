@@ -31,7 +31,6 @@ export async function getProfile(): Promise<Profile | null> {
         twitter: extractProperty(page, NOTION_PROPERTIES.TWITTER, "url") || undefined,
         website: extractProperty(page, NOTION_PROPERTIES.WEBSITE, "url") || undefined,
       },
-      avatar: extractProperty(page, NOTION_PROPERTIES.AVATAR, "url") || undefined,
     };
 
     await setCachedData(cacheKey, profile);

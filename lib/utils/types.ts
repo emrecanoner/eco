@@ -16,7 +16,6 @@ export interface Profile {
     twitter?: string;
     website?: string;
   };
-  avatar?: string;
 }
 
 export interface BlogPost {
