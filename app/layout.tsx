@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { RouteTransition } from "@/components/providers/RouteTransition";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { SettingsProvider } from "@/components/providers/SettingsProvider";
 import { ConditionalLayout } from "@/components/layout/ConditionalLayout";
 import { getSettings } from "@/lib/notion/settings";
 
@@ -35,22 +36,27 @@ export async function generateMetadata(): Promise<Metadata> {
   return metadata;
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await getSettings();
+  const siteTitle = settings?.title || "";
+
   return (
     <html lang="en" className="scroll-smooth">
       <body
         className={`${inter.variable} min-h-screen bg-white dark:bg-zinc-950 font-sans antialiased text-zinc-900 dark:text-zinc-100`}
         style={{ fontFamily: 'var(--font-inter)' }}
       >
-        <ThemeProvider>
-          <RouteTransition>
-            <ConditionalLayout>{children}</ConditionalLayout>
-          </RouteTransition>
-        </ThemeProvider>
+        <SettingsProvider title={siteTitle}>
+          <ThemeProvider>
+            <RouteTransition>
+              <ConditionalLayout>{children}</ConditionalLayout>
+            </RouteTransition>
+          </ThemeProvider>
+        </SettingsProvider>
       </body>
     </html>
   );

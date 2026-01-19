@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/components/providers/ThemeProvider";
+import { useSettings } from "@/components/providers/SettingsProvider";
 
 const getNavItems = (pathname: string) => {
   if (pathname === "/") {
@@ -24,23 +25,8 @@ export function Navigation() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [siteTitle, setSiteTitle] = useState("Portfolio");
+  const { title: siteTitle } = useSettings();
   const { theme, toggleTheme } = useTheme();
-
-  useEffect(() => {
-    async function fetchTitle() {
-      try {
-        const response = await fetch("/api/settings");
-        if (response.ok) {
-          const data = await response.json();
-          setSiteTitle(data.title || "Portfolio");
-        }
-      } catch {
-        // Keep default title
-      }
-    }
-    fetchTitle();
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
