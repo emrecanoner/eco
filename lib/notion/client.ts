@@ -14,6 +14,7 @@ type NotionFilter = {
   property?: string;
   select?: { equals?: string };
   rich_text?: { equals?: string };
+  title?: { equals?: string };
   [key: string]: unknown;
 };
 

@@ -29,7 +29,7 @@ export function ContactCard({ icon, value, label, href }: ContactCardProps) {
               <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full border-2 border-zinc-900 text-zinc-900 dark:border-zinc-100 dark:text-zinc-100 sm:mb-4 sm:h-12 sm:w-12">
                 {icon}
               </div>
-              <p className="mb-1 text-xs font-semibold text-zinc-900 dark:text-zinc-100 sm:text-sm">
+              <p className="mb-1 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                 {value}
               </p>
               <p className="text-xs text-zinc-600 dark:text-zinc-400">{label}</p>

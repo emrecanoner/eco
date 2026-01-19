@@ -187,7 +187,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 />
               </div>
             )}
-            <h1 className="mb-4 text-4xl font-bold text-zinc-900 dark:text-zinc-100">
+            <h1 className="mb-4 text-3xl font-bold text-zinc-900 dark:text-zinc-100 sm:text-4xl">
               {post.title}
             </h1>
             <div className="mb-8 text-sm text-zinc-500 dark:text-zinc-500">
@@ -198,7 +198,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               })}
             </div>
             {post.excerpt && (
-              <p className="mb-8 text-xl text-zinc-600 dark:text-zinc-400">
+              <p className="mb-8 text-sm text-zinc-600 dark:text-zinc-400 sm:text-base">
                 {post.excerpt}
               </p>
             )}

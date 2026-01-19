@@ -28,6 +28,9 @@
     "typescript": "5.7.2"
   },
   "overrides": {
-    "glob": "^10.4.6"
+    "glob": "^10.4.6",
+    "rimraf": "^6.1.2",
+    "@humanwhocodes/config-array": "npm:@eslint/config-array@^0.23.0",
+    "@humanwhocodes/object-schema": "npm:@eslint/object-schema@^3.0.0"
   }
 }

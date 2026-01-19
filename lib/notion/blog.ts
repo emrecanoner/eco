@@ -35,8 +35,8 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
       results.map(async (page) => {
         const post: BlogPost = {
           id: page.id,
-          title: extractProperty(page, NOTION_PROPERTIES.TITLE, "title") || "",
-          slug: extractProperty(page, NOTION_PROPERTIES.SLUG, "rich_text") || "",
+          slug: extractProperty(page, NOTION_PROPERTIES.SLUG, "title") || "",
+          title: extractProperty(page, NOTION_PROPERTIES.TITLE, "rich_text") || "",
           publishedDate: extractProperty(page, NOTION_PROPERTIES.PUBLISHED_DATE, "date") || "",
           status: (extractProperty(page, NOTION_PROPERTIES.STATUS, "select") || "draft") as "published" | "draft",
           excerpt: extractProperty(page, NOTION_PROPERTIES.EXCERPT, "rich_text") || undefined,
@@ -63,32 +63,28 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
     const results = await queryDatabase(
       process.env.NOTION_BLOG_DB,
       {
-        and: [
-          {
-            property: NOTION_PROPERTIES.SLUG,
-            rich_text: {
-              equals: slug,
-            },
-          },
-          {
-            property: NOTION_PROPERTIES.STATUS,
-            select: {
-              equals: "published",
-            },
-          },
-        ],
+        property: NOTION_PROPERTIES.SLUG,
+        title: {
+          equals: slug,
+        },
       }
     );
 
-    if (results.length === 0) return null;
+    // Filter by status manually
+    const publishedResults = results.filter((page) => {
+      const status = extractProperty(page, NOTION_PROPERTIES.STATUS, "select");
+      return status?.toLowerCase() === "published";
+    });
 
-    const page = results[0];
+    if (publishedResults.length === 0) return null;
+
+    const page = publishedResults[0];
     const content = await getPageContent(page.id);
 
     const post: BlogPost = {
       id: page.id,
-      title: extractProperty(page, NOTION_PROPERTIES.TITLE, "title") || "",
-      slug: extractProperty(page, NOTION_PROPERTIES.SLUG, "rich_text") || "",
+      title: extractProperty(page, NOTION_PROPERTIES.TITLE, "rich_text") || "",
+      slug: extractProperty(page, NOTION_PROPERTIES.SLUG, "title") || "",
       publishedDate: extractProperty(page, NOTION_PROPERTIES.PUBLISHED_DATE, "date") || "",
       status: (extractProperty(page, NOTION_PROPERTIES.STATUS, "select") || "draft") as "published" | "draft",
       excerpt: extractProperty(page, NOTION_PROPERTIES.EXCERPT, "rich_text") || undefined,

@@ -12,6 +12,10 @@ interface BlogCardProps {
 }
 
 export function BlogCard({ post, index }: BlogCardProps) {
+  if (!post.slug) {
+    return null;
+  }
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
@@ -33,7 +37,7 @@ export function BlogCard({ post, index }: BlogCardProps) {
               </div>
             )}
             <div>
-              <h2 className="mb-2 text-2xl font-semibold tracking-normal text-zinc-900 transition-colors group-hover:text-zinc-700 dark:text-zinc-100 dark:group-hover:text-zinc-300 sm:text-3xl">
+              <h2 className="mb-2 text-lg font-semibold tracking-normal text-zinc-900 transition-colors group-hover:text-zinc-700 dark:text-zinc-100 dark:group-hover:text-zinc-300 sm:text-xl">
                 {post.title}
               </h2>
               <div className="mb-3 flex items-center gap-3 text-sm text-zinc-500 dark:text-zinc-400">
