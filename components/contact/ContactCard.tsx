@@ -25,7 +25,7 @@ export function ContactCard({ icon, value, label, href }: ContactCardProps) {
         className="group block focus-ring"
         aria-label={`Visit ${label}`}
       >
-            <div className="flex w-48 flex-col items-center rounded-lg border border-zinc-200 bg-white p-4 text-center transition-colors hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700 sm:w-56 sm:p-6">
+            <div className="flex w-48 flex-col items-center rounded-lg border border-zinc-200 bg-white p-5 text-center transition-colors hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700 sm:w-56 sm:p-6">
               <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full border-2 border-zinc-900 text-zinc-900 dark:border-zinc-100 dark:text-zinc-100 sm:mb-4 sm:h-12 sm:w-12">
                 {icon}
               </div>
