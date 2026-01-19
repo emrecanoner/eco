@@ -11,7 +11,7 @@ interface ContactCardProps {
   href: string;
 }
 
-export function ContactCard({ icon, value, label, href }: ContactCardProps) {
+export function ContactCard({ type, icon, value, label, href }: ContactCardProps) {
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
@@ -25,11 +25,11 @@ export function ContactCard({ icon, value, label, href }: ContactCardProps) {
         className="group block focus-ring"
         aria-label={`Visit ${label}`}
       >
-            <div className="flex w-48 flex-col items-center rounded-lg border border-zinc-200 bg-white px-6 py-5 text-center transition-colors hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700 sm:w-56 sm:p-6">
+            <div className="flex w-48 min-w-0 min-h-[140px] flex-col items-center justify-center rounded-lg border border-zinc-200 bg-white px-6 py-5 text-center transition-colors hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700 sm:w-56 sm:min-h-[160px] sm:p-6">
               <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full border-2 border-zinc-900 text-zinc-900 dark:border-zinc-100 dark:text-zinc-100 sm:mb-4 sm:h-12 sm:w-12">
                 {icon}
               </div>
-              <p className="mb-1 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+              <p className={`mb-1 w-full font-semibold text-zinc-900 dark:text-zinc-100 ${type === "email" ? "break-words text-xs leading-tight line-clamp-3" : "text-sm"}`} style={type === "email" ? { wordBreak: "break-word", overflowWrap: "anywhere" } : undefined}>
                 {value}
               </p>
               <p className="text-xs text-zinc-600 dark:text-zinc-400">{label}</p>
