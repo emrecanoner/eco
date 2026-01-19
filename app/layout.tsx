@@ -16,8 +16,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings();
   
   const metadata: Metadata = {
-    title: settings?.title || "Portfolio",
-    description: settings?.description || "Personal portfolio website",
+    title: settings?.title || "",
+    description: settings?.description || "",
   };
 
   if (settings?.favicon) {
