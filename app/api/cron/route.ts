@@ -3,6 +3,7 @@ import { getProfile } from "@/lib/notion/profile";
 import { getBlogPosts } from "@/lib/notion/blog";
 import { getMovies } from "@/lib/notion/movies";
 import { getBooks } from "@/lib/notion/books";
+import { getSettings } from "@/lib/notion/settings";
 import { clearCache } from "@/lib/utils/cache";
 
 export async function GET(request: Request) {

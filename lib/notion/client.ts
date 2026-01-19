@@ -1,4 +1,5 @@
 import { Client } from "@notionhq/client";
+import { NOTION_API_VERSION } from "./constants";
 
 if (!process.env.NOTION_API_KEY) {
   throw new Error("NOTION_API_KEY is not set");
@@ -23,7 +24,7 @@ export async function queryDatabase(
     method: "POST",
     headers: {
       "Authorization": `Bearer ${process.env.NOTION_API_KEY}`,
-      "Notion-Version": "2022-06-28",
+      "Notion-Version": NOTION_API_VERSION,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(requestBody),

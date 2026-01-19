@@ -2,6 +2,7 @@ import { queryDatabase } from "./client";
 import { Profile } from "@/lib/utils/types";
 import { getCachedData, setCachedData } from "@/lib/utils/cache";
 import { extractProperty } from "./utils";
+import { NOTION_PROPERTIES } from "./constants";
 
 export async function getProfile(): Promise<Profile | null> {
   const cacheKey = "profile";
@@ -18,19 +19,19 @@ export async function getProfile(): Promise<Profile | null> {
 
     const page = results[0];
     const profile: Profile = {
-      name: extractProperty(page, "Name", "title") || "",
-      title: extractProperty(page, "Title", "rich_text") || "",
-      bio: extractProperty(page, "Bio", "rich_text") || "",
-      email: extractProperty(page, "Email", "email") || "",
-      location: extractProperty(page, "Location", "rich_text") || "",
-      skills: extractProperty(page, "Skills", "multi_select") || [],
+      name: extractProperty(page, NOTION_PROPERTIES.NAME, "title") || "",
+      title: extractProperty(page, NOTION_PROPERTIES.TITLE, "rich_text") || "",
+      bio: extractProperty(page, NOTION_PROPERTIES.BIO, "rich_text") || "",
+      email: extractProperty(page, NOTION_PROPERTIES.EMAIL, "email") || "",
+      location: extractProperty(page, NOTION_PROPERTIES.LOCATION, "rich_text") || "",
+      skills: extractProperty(page, NOTION_PROPERTIES.SKILLS, "multi_select") || [],
       socialLinks: {
-        github: extractProperty(page, "GitHub", "url") || undefined,
-        linkedin: extractProperty(page, "LinkedIn", "url") || undefined,
-        twitter: extractProperty(page, "Twitter", "url") || undefined,
-        website: extractProperty(page, "Website", "url") || undefined,
+        github: extractProperty(page, NOTION_PROPERTIES.GITHUB, "url") || undefined,
+        linkedin: extractProperty(page, NOTION_PROPERTIES.LINKEDIN, "url") || undefined,
+        twitter: extractProperty(page, NOTION_PROPERTIES.TWITTER, "url") || undefined,
+        website: extractProperty(page, NOTION_PROPERTIES.WEBSITE, "url") || undefined,
       },
-      avatar: extractProperty(page, "Avatar", "url") || undefined,
+      avatar: extractProperty(page, NOTION_PROPERTIES.AVATAR, "url") || undefined,
     };
 
     await setCachedData(cacheKey, profile);

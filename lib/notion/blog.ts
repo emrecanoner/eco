@@ -2,6 +2,7 @@ import { queryDatabase, getPageContent } from "./client";
 import { BlogPost } from "@/lib/utils/types";
 import { getCachedData, setCachedData } from "@/lib/utils/cache";
 import { extractProperty } from "./utils";
+import { NOTION_PROPERTIES } from "./constants";
 
 export async function getBlogPosts(): Promise<BlogPost[]> {
   const cacheKey = "blog-posts";
@@ -16,14 +17,14 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
     const results = await queryDatabase(
       process.env.NOTION_BLOG_DB,
       {
-        property: "Status",
+        property: NOTION_PROPERTIES.STATUS,
         select: {
           equals: "published",
         },
       },
       [
         {
-          property: "Published Date",
+          property: NOTION_PROPERTIES.PUBLISHED_DATE,
           direction: "descending",
         },
       ]
@@ -33,12 +34,12 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
       results.map(async (page: any) => {
         const post: BlogPost = {
           id: page.id,
-          title: extractProperty(page, "Title", "title") || "",
-          slug: extractProperty(page, "Slug", "rich_text") || "",
-          publishedDate: extractProperty(page, "Published Date", "date") || "",
-          status: (extractProperty(page, "Status", "select") || "draft") as "published" | "draft",
-          excerpt: extractProperty(page, "Excerpt", "rich_text") || undefined,
-          coverImage: extractProperty(page, "Cover Image", "url") || undefined,
+          title: extractProperty(page, NOTION_PROPERTIES.TITLE, "title") || "",
+          slug: extractProperty(page, NOTION_PROPERTIES.SLUG, "rich_text") || "",
+          publishedDate: extractProperty(page, NOTION_PROPERTIES.PUBLISHED_DATE, "date") || "",
+          status: (extractProperty(page, NOTION_PROPERTIES.STATUS, "select") || "draft") as "published" | "draft",
+          excerpt: extractProperty(page, NOTION_PROPERTIES.EXCERPT, "rich_text") || undefined,
+          coverImage: extractProperty(page, NOTION_PROPERTIES.COVER_IMAGE, "url") || undefined,
           content: null,
         };
         return post;
@@ -59,7 +60,7 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
 
   try {
     const results = await queryDatabase(process.env.NOTION_BLOG_DB, {
-      property: "Slug",
+      property: NOTION_PROPERTIES.SLUG,
       rich_text: {
         equals: slug,
       },
@@ -72,12 +73,12 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
 
     const post: BlogPost = {
       id: page.id,
-      title: extractProperty(page, "Title", "title") || "",
-      slug: extractProperty(page, "Slug", "rich_text") || "",
-      publishedDate: extractProperty(page, "Published Date", "date") || "",
-      status: (extractProperty(page, "Status", "select") || "draft") as "published" | "draft",
-      excerpt: extractProperty(page, "Excerpt", "rich_text") || undefined,
-      coverImage: extractProperty(page, "Cover Image", "url") || undefined,
+      title: extractProperty(page, NOTION_PROPERTIES.TITLE, "title") || "",
+      slug: extractProperty(page, NOTION_PROPERTIES.SLUG, "rich_text") || "",
+      publishedDate: extractProperty(page, NOTION_PROPERTIES.PUBLISHED_DATE, "date") || "",
+      status: (extractProperty(page, NOTION_PROPERTIES.STATUS, "select") || "draft") as "published" | "draft",
+      excerpt: extractProperty(page, NOTION_PROPERTIES.EXCERPT, "rich_text") || undefined,
+      coverImage: extractProperty(page, NOTION_PROPERTIES.COVER_IMAGE, "url") || undefined,
       content,
     };
 

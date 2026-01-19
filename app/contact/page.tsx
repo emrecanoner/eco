@@ -20,7 +20,7 @@ export default function ContactPage() {
           setProfile(data);
         }
       } catch (error) {
-        console.error("Error fetching profile:", error);
+        // Error handled silently
       } finally {
         setLoading(false);
       }

@@ -2,6 +2,7 @@ import { queryDatabase } from "./client";
 import { Settings } from "@/lib/utils/types";
 import { getCachedData, setCachedData } from "@/lib/utils/cache";
 import { extractProperty } from "./utils";
+import { NOTION_PROPERTIES } from "./constants";
 
 export async function getSettings(): Promise<Settings | null> {
   if (!process.env.NOTION_SETTINGS_DB) {
@@ -21,11 +22,11 @@ export async function getSettings(): Promise<Settings | null> {
 
     const page = results[0];
     const settings: Settings = {
-      title: extractProperty(page, "Title", "title") || "",
-      favicon: extractProperty(page, "Favicon", "url") || undefined,
-      siteName: extractProperty(page, "Site Name", "rich_text") || "",
-      description: extractProperty(page, "Description", "rich_text") || "",
-      metaTags: extractProperty(page, "Meta Tags", "rich_text") || undefined,
+      title: extractProperty(page, NOTION_PROPERTIES.TITLE, "title") || "",
+      favicon: extractProperty(page, NOTION_PROPERTIES.FAVICON, "url") || undefined,
+      siteName: extractProperty(page, NOTION_PROPERTIES.SITE_NAME, "rich_text") || "",
+      description: extractProperty(page, NOTION_PROPERTIES.DESCRIPTION, "rich_text") || "",
+      metaTags: extractProperty(page, NOTION_PROPERTIES.META_TAGS, "rich_text") || undefined,
     };
 
     await setCachedData(cacheKey, settings);

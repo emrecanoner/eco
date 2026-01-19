@@ -93,7 +93,7 @@ export function Navigation() {
           <div className="flex items-center gap-2">
             <button
               onClick={toggleTheme}
-              className="flex h-9 w-9 items-center justify-center text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 focus-ring"
+              className="flex h-11 w-11 items-center justify-center text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 focus-ring sm:h-9 sm:w-9"
               aria-label={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
             >
               {theme === "light" ? (
@@ -125,7 +125,7 @@ export function Navigation() {
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="flex h-9 w-9 items-center justify-center text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300 focus-ring md:hidden"
+              className="flex h-11 w-11 items-center justify-center text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300 focus-ring md:hidden"
               aria-label="Toggle menu"
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-menu"
