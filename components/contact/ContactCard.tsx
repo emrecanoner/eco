@@ -6,12 +6,11 @@ import { motion } from "framer-motion";
 interface ContactCardProps {
   type: "email" | "twitter" | "github" | "linkedin";
   icon: React.ReactNode;
-  value: string;
   label: string;
   href: string;
 }
 
-export function ContactCard({ type, icon, value, label, href }: ContactCardProps) {
+export function ContactCard({ type, icon, label, href }: ContactCardProps) {
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
@@ -29,10 +28,7 @@ export function ContactCard({ type, icon, value, label, href }: ContactCardProps
               <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full border-2 border-zinc-900 text-zinc-900 dark:border-zinc-100 dark:text-zinc-100 sm:mb-4 sm:h-12 sm:w-12">
                 {icon}
               </div>
-              <p className={`mb-1 w-full font-semibold text-zinc-900 dark:text-zinc-100 ${type === "email" ? "break-words text-xs leading-tight line-clamp-3" : "text-sm"}`} style={type === "email" ? { wordBreak: "break-word", overflowWrap: "anywhere" } : undefined}>
-                {value}
-              </p>
-              <p className="text-xs text-zinc-600 dark:text-zinc-400">{label}</p>
+              <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{label}</p>
             </div>
       </Link>
     </motion.div>
