@@ -10,7 +10,7 @@ interface ContactCardProps {
   href: string;
 }
 
-export function ContactCard({ type, icon, label, href }: ContactCardProps) {
+export function ContactCard({ icon, label, href }: ContactCardProps) {
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
