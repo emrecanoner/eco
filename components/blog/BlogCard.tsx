@@ -22,12 +22,12 @@ export function BlogCard({ post, index }: BlogCardProps) {
         <Card className="overflow-hidden">
           <div className="space-y-4">
             {post.coverImage && post.coverImage.startsWith("http") && (
-              <div className="relative aspect-video w-full overflow-hidden rounded-lg">
+              <div className="relative aspect-video w-full max-h-48 overflow-hidden rounded-lg sm:max-h-none">
                 <Image
                   src={post.coverImage}
                   alt={post.title}
                   fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 50vw"
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />
               </div>

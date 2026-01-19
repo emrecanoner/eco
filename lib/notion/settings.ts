@@ -23,7 +23,7 @@ export async function getSettings(): Promise<Settings | null> {
     const page = results[0];
     const settings: Settings = {
       title: extractProperty(page, NOTION_PROPERTIES.TITLE, "title") || "",
-      favicon: extractProperty(page, NOTION_PROPERTIES.FAVICON, "url") || undefined,
+      favicon: extractProperty(page, NOTION_PROPERTIES.FAVICON, "files") || extractProperty(page, NOTION_PROPERTIES.FAVICON, "url") || undefined,
       siteName: extractProperty(page, NOTION_PROPERTIES.SITE_NAME, "rich_text") || "",
       description: extractProperty(page, NOTION_PROPERTIES.DESCRIPTION, "rich_text") || "",
       metaTags: extractProperty(page, NOTION_PROPERTIES.META_TAGS, "rich_text") || undefined,

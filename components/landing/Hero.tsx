@@ -23,7 +23,7 @@ export function Hero({ profile, title }: HeroProps) {
         </Link>
       </div>
       <div className="space-y-4">
-        <h1 className="text-6xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-7xl md:text-8xl lg:text-9xl">
+        <h1 className="text-4xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl">
           {displayTitle}
         </h1>
         <p className="mx-auto max-w-2xl text-sm text-zinc-600 dark:text-zinc-400 sm:text-base">
