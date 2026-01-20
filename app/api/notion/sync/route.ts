@@ -18,11 +18,11 @@ export async function POST(request: Request) {
     await clearCache();
 
     await Promise.all([
-      getProfile(),
-      getBlogPosts(),
-      getMovies(),
-      getBooks(),
-      getSettings(),
+      getProfile(true),
+      getBlogPosts(true),
+      getMovies(true),
+      getBooks(true),
+      getSettings(true),
     ]);
 
     return NextResponse.json({

@@ -3,8 +3,6 @@ import { BlogList } from "@/components/blog/BlogList";
 import { Container } from "@/components/ui/Container";
 import { EmptyState } from "@/components/ui/EmptyState";
 
-export const dynamic = "force-dynamic";
-
 export default async function BlogPage() {
   const posts = await getBlogPosts();
 

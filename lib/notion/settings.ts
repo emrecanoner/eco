@@ -4,18 +4,20 @@ import { getCachedData, setCachedData } from "@/lib/utils/cache";
 import { extractProperty } from "./utils";
 import { NOTION_PROPERTIES } from "./constants";
 
-export async function getSettings(): Promise<Settings | null> {
+export async function getSettings(forceFetch = false): Promise<Settings | null> {
   if (!process.env.NOTION_SETTINGS_DB) {
     return null;
   }
 
   const cacheKey = "settings";
   
-  const cached = await getCachedData<Settings>(cacheKey);
-  if (cached) return cached;
+  if (!forceFetch) {
+    const cached = await getCachedData<Settings>(cacheKey);
+    if (cached) return cached;
+  }
 
   try {
-    const results = await queryDatabase(process.env.NOTION_SETTINGS_DB);
+    const results = await queryDatabase(process.env.NOTION_SETTINGS_DB, undefined, undefined, forceFetch);
     if (results.length === 0) {
       return null;
     }

@@ -3,8 +3,6 @@ import { Container } from "@/components/ui/Container";
 import { BookGrid } from "@/components/books/BookGrid";
 import { EmptyState } from "@/components/ui/EmptyState";
 
-export const dynamic = "force-dynamic";
-
 export default async function BooksPage() {
   const books = await getBooks();
 

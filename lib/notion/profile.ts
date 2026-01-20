@@ -4,17 +4,19 @@ import { getCachedData, setCachedData } from "@/lib/utils/cache";
 import { extractProperty } from "./utils";
 import { NOTION_PROPERTIES } from "./constants";
 
-export async function getProfile(): Promise<Profile | null> {
+export async function getProfile(forceFetch = false): Promise<Profile | null> {
   const cacheKey = "profile";
-  const cached = await getCachedData<Profile>(cacheKey);
-  if (cached) return cached;
+  if (!forceFetch) {
+    const cached = await getCachedData<Profile>(cacheKey);
+    if (cached) return cached;
+  }
 
   if (!process.env.NOTION_PROFILE_DB) {
     return null;
   }
 
   try {
-    const results = await queryDatabase(process.env.NOTION_PROFILE_DB);
+    const results = await queryDatabase(process.env.NOTION_PROFILE_DB, undefined, undefined, forceFetch);
     if (results.length === 0) return null;
 
     const page = results[0];

@@ -27,7 +27,8 @@ type NotionSort = {
 export async function queryDatabase(
   databaseId: string,
   filter?: NotionFilter,
-  sorts?: NotionSort[]
+  sorts?: NotionSort[],
+  forceFetch?: boolean
 ): Promise<PageObjectResponse[]> {
   const requestBody: {
     filter?: NotionFilter;
@@ -46,7 +47,7 @@ export async function queryDatabase(
       "Content-Type": "application/json",
     },
     body: JSON.stringify(requestBody),
-    cache: "no-store",
+    cache: forceFetch ? "no-store" : "force-cache",
   });
   
   if (!response.ok) {

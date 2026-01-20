@@ -3,8 +3,6 @@ import { MovieGrid } from "@/components/movies/MovieGrid";
 import { Container } from "@/components/ui/Container";
 import { EmptyState } from "@/components/ui/EmptyState";
 
-export const dynamic = "force-dynamic";
-
 export default async function MoviesPage() {
   const movies = await getMovies();
 

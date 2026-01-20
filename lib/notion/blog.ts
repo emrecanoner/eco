@@ -5,10 +5,12 @@ import { extractProperty } from "./utils";
 import { NOTION_PROPERTIES } from "./constants";
 import type { BlockObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
-export async function getBlogPosts(): Promise<BlogPost[]> {
+export async function getBlogPosts(forceFetch = false): Promise<BlogPost[]> {
   const cacheKey = "blog-posts";
-  const cached = await getCachedData<BlogPost[]>(cacheKey);
-  if (cached) return cached;
+  if (!forceFetch) {
+    const cached = await getCachedData<BlogPost[]>(cacheKey);
+    if (cached) return cached;
+  }
 
   if (!process.env.NOTION_BLOG_DB) {
     return [];
@@ -28,7 +30,8 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
           property: NOTION_PROPERTIES.PUBLISHED_DATE,
           direction: "descending",
         },
-      ]
+      ],
+      forceFetch
     );
 
     const posts: BlogPost[] = await Promise.all(

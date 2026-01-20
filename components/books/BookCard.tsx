@@ -45,10 +45,10 @@ export function BookCard({ book, index }: BookCardProps) {
                   <h3 className="text-base font-semibold text-white mb-1 sm:text-lg">{book.title}</h3>
                   <p className="text-xs text-zinc-300 mb-2 sm:text-sm">by {book.author}</p>
                   <div className="flex flex-wrap gap-2 text-xs text-zinc-300">
-                    {book.rating > 0 && <span>⭐ {book.rating}/10</span>}
+                    {book.rating > 0 && <span>⭐ {book.rating.toFixed(1)}/5</span>}
                     {book.pages && <span>{book.pages} pages</span>}
-                    {book.genre && book.genre.length > 0 && (
-                      <span>{book.genre.join(", ")}</span>
+                    {book.genre && (
+                      <span>{book.genre}</span>
                     )}
                   </div>
                 </motion.div>
@@ -56,7 +56,7 @@ export function BookCard({ book, index }: BookCardProps) {
             </AnimatePresence>
             {book.rating > 0 && !isHovered && (
               <div className="absolute right-2 top-2 rounded-full bg-black/80 px-2 py-1 text-xs font-bold text-white">
-                ⭐ {book.rating}
+                ⭐ {book.rating.toFixed(1)}
               </div>
             )}
           </div>

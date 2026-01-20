@@ -162,8 +162,6 @@ function renderBlock(block: BlockObjectResponse): React.ReactNode {
   }
 }
 
-export const dynamic = "force-dynamic";
-
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
   const post = await getBlogPostBySlug(slug);

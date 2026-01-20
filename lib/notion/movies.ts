@@ -4,10 +4,12 @@ import { getCachedData, setCachedData } from "@/lib/utils/cache";
 import { extractProperty } from "./utils";
 import { NOTION_PROPERTIES } from "./constants";
 
-export async function getMovies(): Promise<Movie[]> {
+export async function getMovies(forceFetch = false): Promise<Movie[]> {
   const cacheKey = "movies";
-  const cached = await getCachedData<Movie[]>(cacheKey);
-  if (cached) return cached;
+  if (!forceFetch) {
+    const cached = await getCachedData<Movie[]>(cacheKey);
+    if (cached) return cached;
+  }
 
   if (!process.env.NOTION_MOVIES_DB) {
     return [];
@@ -22,7 +24,8 @@ export async function getMovies(): Promise<Movie[]> {
           property: NOTION_PROPERTIES.WATCHED_DATE,
           direction: "descending",
         },
-      ]
+      ],
+      forceFetch
     );
 
     const movies: Movie[] = results.map((page) => {
@@ -35,7 +38,7 @@ export async function getMovies(): Promise<Movie[]> {
         watchedDate: extractProperty(page, NOTION_PROPERTIES.WATCHED_DATE, "date") || "",
         poster: extractProperty(page, NOTION_PROPERTIES.POSTER, "url") || undefined,
         year: extractProperty(page, NOTION_PROPERTIES.YEAR, "number") || undefined,
-        genre: extractProperty(page, NOTION_PROPERTIES.GENRE, "multi_select") || undefined,
+        genre: extractProperty(page, NOTION_PROPERTIES.GENRE, "select") || undefined,
       };
     });
 

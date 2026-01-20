@@ -3,8 +3,6 @@ import { getSettings } from "@/lib/notion/settings";
 import { Hero } from "@/components/landing/Hero";
 import { Container } from "@/components/ui/Container";
 
-export const dynamic = "force-dynamic";
-
 export default async function Home() {
   const [profile, settings] = await Promise.all([
     getProfile(),

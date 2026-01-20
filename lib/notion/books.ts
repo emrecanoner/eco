@@ -4,10 +4,12 @@ import { getCachedData, setCachedData } from "@/lib/utils/cache";
 import { extractProperty } from "./utils";
 import { NOTION_PROPERTIES } from "./constants";
 
-export async function getBooks(): Promise<Book[]> {
+export async function getBooks(forceFetch = false): Promise<Book[]> {
   const cacheKey = "books";
-  const cached = await getCachedData<Book[]>(cacheKey);
-  if (cached) return cached;
+  if (!forceFetch) {
+    const cached = await getCachedData<Book[]>(cacheKey);
+    if (cached) return cached;
+  }
 
   if (!process.env.NOTION_BOOKS_DB) {
     return [];
@@ -22,7 +24,8 @@ export async function getBooks(): Promise<Book[]> {
           property: NOTION_PROPERTIES.READ_DATE,
           direction: "descending",
         },
-      ]
+      ],
+      forceFetch
     );
 
     const books: Book[] = results.map((page) => ({
@@ -32,7 +35,7 @@ export async function getBooks(): Promise<Book[]> {
       rating: extractProperty(page, NOTION_PROPERTIES.RATING, "number") || 0,
       readDate: extractProperty(page, NOTION_PROPERTIES.READ_DATE, "date") || "",
       cover: extractProperty(page, NOTION_PROPERTIES.COVER, "url") || undefined,
-      genre: extractProperty(page, NOTION_PROPERTIES.GENRE, "multi_select") || undefined,
+      genre: extractProperty(page, NOTION_PROPERTIES.GENRE, "select") || undefined,
       pages: extractProperty(page, NOTION_PROPERTIES.PAGES, "number") || undefined,
     }));
 
