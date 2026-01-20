@@ -5,6 +5,7 @@ import { getMovies } from "@/lib/notion/movies";
 import { getBooks } from "@/lib/notion/books";
 import { getSettings } from "@/lib/notion/settings";
 import { clearCache } from "@/lib/utils/cache";
+import { revalidateAllPages } from "@/lib/utils/revalidation";
 
 export async function POST(request: Request) {
   try {
@@ -24,6 +25,9 @@ export async function POST(request: Request) {
       getBooks(true),
       getSettings(true),
     ]);
+
+    // Revalidate all pages to ensure fresh data is shown
+    revalidateAllPages();
 
     return NextResponse.json({
       success: true,

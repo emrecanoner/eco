@@ -57,7 +57,7 @@ export async function getBlogPosts(forceFetch = false): Promise<BlogPost[]> {
   }
 }
 
-export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+export async function getBlogPostBySlug(slug: string, forceFetch = false): Promise<BlogPost | null> {
   if (!process.env.NOTION_BLOG_DB) {
     return null;
   }
@@ -70,7 +70,9 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
         title: {
           equals: slug,
         },
-      }
+      },
+      undefined,
+      forceFetch
     );
 
     // Filter by status manually
