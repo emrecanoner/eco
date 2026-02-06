@@ -5,6 +5,7 @@ import { Movie } from "@/lib/utils/types";
 import { Card } from "@/components/ui/Card";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import { renderStars } from "@/lib/utils/movies";
 
 interface MovieCardProps {
   movie: Movie;
@@ -43,17 +44,22 @@ export function MovieCard({ movie, index }: MovieCardProps) {
                   className="absolute inset-0 bg-zinc-900/80 p-4 flex flex-col justify-end"
                 >
                   <h3 className="text-base font-semibold text-white mb-2 sm:text-lg">{movie.title}</h3>
+                  {movie.rating > 0 && (
+                    <div className="mb-2 text-xs text-yellow-300 sm:text-sm">
+                      {renderStars(movie.rating)}
+                    </div>
+                  )}
                   <div className="flex flex-wrap gap-2 text-xs text-zinc-300">
                     {movie.year && <span>{movie.year}</span>}
-                    {movie.rating > 0 && <span>⭐ {movie.rating.toFixed(1)}/5</span>}
+                    {movie.rating > 0 && <span>{movie.rating.toFixed(1)}/5</span>}
                     {movie.genre && (
-                      <span>{movie.genre}</span>
+                      <span className="rounded-full bg-zinc-800 px-2 py-0.5">{movie.genre}</span>
                     )}
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
-            {movie.rating > 0 && !isHovered && (
+            {!isHovered && movie.rating > 0 && (
               <div className="absolute right-2 top-2 rounded-full bg-black/80 px-2 py-1 text-xs font-bold text-white">
                 ⭐ {movie.rating.toFixed(1)}
               </div>
