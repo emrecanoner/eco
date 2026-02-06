@@ -68,28 +68,30 @@ export function MovieGrid({ movies }: MovieGridProps) {
   return (
     <div>
       <div className="mb-6 space-y-4 sm:mb-8">
-        <div className="flex flex-wrap gap-2 sm:gap-3">
-          {(["all", "movie", "series", "top-rated", "recently-watched"] as const).map((filterType) => (
-            <motion.button
-              key={filterType}
-              onClick={() => setTypeFilter(filterType)}
-              className={`rounded-lg border px-2.5 py-1 text-xs font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 sm:px-3 sm:py-1.5 sm:text-sm ${
-                typeFilter === filterType
-                  ? "border-zinc-200 bg-zinc-900 text-white dark:border-zinc-800 dark:bg-zinc-100 dark:text-zinc-900"
-                  : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
-              }`}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              aria-pressed={typeFilter === filterType}
-              aria-label={`Filter by ${filterType}`}
-            >
-              {getFilterTypeLabel(filterType)}
-            </motion.button>
-          ))}
+        <div className="overflow-x-auto pb-2 sm:pb-0">
+          <div className="flex gap-2 sm:flex-wrap sm:gap-3">
+            {(["all", "movie", "series", "top-rated", "recently-watched"] as const).map((filterType) => (
+              <motion.button
+                key={filterType}
+                onClick={() => setTypeFilter(filterType)}
+                className={`flex-shrink-0 whitespace-nowrap rounded-lg border px-4 py-2.5 text-sm font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 sm:px-4 sm:py-2 sm:text-sm ${
+                  typeFilter === filterType
+                    ? "border-zinc-200 bg-zinc-900 text-white dark:border-zinc-800 dark:bg-zinc-100 dark:text-zinc-900"
+                    : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                }`}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                aria-pressed={typeFilter === filterType}
+                aria-label={`Filter by ${filterType}`}
+              >
+                {getFilterTypeLabel(filterType)}
+              </motion.button>
+            ))}
+          </div>
         </div>
 
-        <div className="flex flex-wrap gap-2 sm:gap-3">
+        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3">
           <SelectDropdown
             value={genreFilter}
             onChange={(e) => setGenreFilter(e.target.value)}

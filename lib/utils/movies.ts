@@ -167,8 +167,7 @@ export function getUniqueYears(movies: Movie[]): number[] {
 
 export function renderStars(rating: number): string {
   const fullStars = Math.floor(rating);
-  const hasHalfStar = rating % 1 >= 0.5;
-  return "⭐".repeat(fullStars) + (hasHalfStar ? "✨" : "") + "☆".repeat(5 - fullStars - (hasHalfStar ? 1 : 0));
+  return "⭐".repeat(fullStars) + "☆".repeat(5 - fullStars);
 }
 
 const FILTER_TYPE_LABELS: Record<string, string> = {
