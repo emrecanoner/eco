@@ -25,13 +25,6 @@ export function MovieGrid({ movies }: MovieGridProps) {
   const uniqueGenres = useMemo(() => getUniqueGenres(movies), [movies]);
   const uniqueYears = useMemo(() => getUniqueYears(movies), [movies]);
 
-  const filters: MovieFilters = {
-    type: typeFilter === "all" || typeFilter === "top-rated" || typeFilter === "recently-watched" ? undefined : typeFilter,
-    genres: genreFilter !== "all" ? [genreFilter] : undefined,
-    year: yearFilter !== "all" ? parseInt(yearFilter) : undefined,
-    minRating: minRating > 0 ? minRating : undefined,
-  };
-
   const filteredAndSorted = useMemo(() => {
     if (typeFilter === "top-rated") {
       return getTopRated(movies, 8);
@@ -39,9 +32,15 @@ export function MovieGrid({ movies }: MovieGridProps) {
     if (typeFilter === "recently-watched") {
       return getRecentlyWatched(movies, 8);
     }
+    const filters: MovieFilters = {
+      type: typeFilter === "all" ? undefined : typeFilter,
+      genres: genreFilter !== "all" ? [genreFilter] : undefined,
+      year: yearFilter !== "all" ? parseInt(yearFilter) : undefined,
+      minRating: minRating > 0 ? minRating : undefined,
+    };
     const filtered = filterMovies(movies, filters);
     return sortMovies(filtered, sortBy);
-  }, [movies, filters, sortBy, typeFilter]);
+  }, [movies, typeFilter, genreFilter, yearFilter, minRating, sortBy]);
 
   useEffect(() => {
     setCurrentPage(1);

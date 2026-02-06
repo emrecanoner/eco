@@ -2,7 +2,6 @@
 
 import { Movie } from "@/lib/utils/types";
 import { MovieCard } from "./MovieCard";
-import { motion } from "framer-motion";
 
 interface MovieSectionProps {
   title: string;
