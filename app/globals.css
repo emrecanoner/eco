@@ -14,6 +14,10 @@
     @apply border-zinc-200 dark:border-zinc-800;
   }
   
+  button {
+    @apply border-zinc-200 dark:border-zinc-800;
+  }
+  
   body {
     @apply bg-white text-zinc-900 antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
@@ -32,13 +36,8 @@
     font-family: var(--font-calsans);
   }
 
-  /* Focus visible - only show on keyboard navigation */
-  *:focus-visible {
-    @apply outline-none ring-2 ring-zinc-900 ring-offset-2 dark:ring-zinc-100 dark:ring-offset-zinc-950;
-  }
-
-  /* Hide focus ring for mouse users */
-  *:focus:not(:focus-visible) {
+  /* Remove focus outline */
+  *:focus {
     @apply outline-none;
   }
 
@@ -57,8 +56,4 @@
     @apply bg-gradient-to-r from-zinc-900 to-zinc-700 bg-clip-text text-transparent dark:from-zinc-100 dark:to-zinc-400;
   }
 
-  /* HeroUI-inspired focus ring utility */
-  .focus-ring {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 dark:focus-visible:ring-zinc-100 dark:focus-visible:ring-offset-zinc-950;
-  }
 }

@@ -68,15 +68,15 @@ export function MovieGrid({ movies }: MovieGridProps) {
   return (
     <div>
       <div className="mb-6 space-y-4 sm:mb-8">
-        <div className="overflow-x-auto pb-2 sm:pb-0">
-          <div className="flex gap-2 sm:flex-wrap sm:gap-3">
+        <div className="overflow-x-auto -mx-1 sm:mx-0">
+          <div className="flex gap-2 px-1 sm:flex-wrap sm:gap-3 sm:px-0">
             {(["all", "movie", "series", "top-rated", "recently-watched"] as const).map((filterType) => (
               <motion.button
                 key={filterType}
                 onClick={() => setTypeFilter(filterType)}
-                className={`flex-shrink-0 whitespace-nowrap rounded-lg border px-4 py-2.5 text-sm font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 sm:px-4 sm:py-2 sm:text-sm ${
+                className={`flex-shrink-0 whitespace-nowrap rounded-lg border px-4 py-2.5 text-sm font-semibold transition-colors duration-200 focus:outline-none active:border-zinc-900 active:bg-zinc-900 active:text-white dark:active:border-zinc-100 dark:active:bg-zinc-100 dark:active:text-zinc-900 sm:px-4 sm:py-2 sm:text-sm ${
                   typeFilter === filterType
-                    ? "border-zinc-200 bg-zinc-900 text-white dark:border-zinc-800 dark:bg-zinc-100 dark:text-zinc-900"
+                    ? "border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900"
                     : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
                 }`}
                 whileHover={{ scale: 1.02 }}
@@ -159,7 +159,7 @@ export function MovieGrid({ movies }: MovieGridProps) {
                 <motion.button
                   onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
                   disabled={currentPage === 1}
-                  className={`rounded-lg border border-zinc-200 bg-white px-4 py-2 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:focus:ring-zinc-100 sm:px-5 sm:py-2.5 sm:text-sm ${
+                  className={`rounded-lg border border-zinc-200 bg-white px-4 py-2 text-xs font-semibold transition-colors focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 sm:px-5 sm:py-2.5 sm:text-sm ${
                     currentPage === 1
                       ? "cursor-not-allowed border-zinc-200 bg-zinc-50 text-zinc-400 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-600"
                       : "text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800"
@@ -175,7 +175,7 @@ export function MovieGrid({ movies }: MovieGridProps) {
                 <motion.button
                   onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
-                  className={`rounded-lg border border-zinc-200 bg-white px-4 py-2 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:focus:ring-zinc-100 sm:px-5 sm:py-2.5 sm:text-sm ${
+                  className={`rounded-lg border border-zinc-200 bg-white px-4 py-2 text-xs font-semibold transition-colors focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 sm:px-5 sm:py-2.5 sm:text-sm ${
                     currentPage === totalPages
                       ? "cursor-not-allowed border-zinc-200 bg-zinc-50 text-zinc-400 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-600"
                       : "text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800"

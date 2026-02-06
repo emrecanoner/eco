@@ -51,7 +51,7 @@ export function Navigation() {
         <div className="flex h-12 items-center justify-between sm:h-14">
           <Link
             href="/"
-            className="text-sm font-medium tracking-tight text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300 focus-ring"
+            className="text-sm font-medium tracking-tight text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
             aria-label="Home"
           >
             {siteTitle}
@@ -61,7 +61,7 @@ export function Navigation() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="relative px-3 py-2 text-sm font-normal text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 focus-ring"
+                className="relative px-3 py-2 text-sm font-normal text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
                 aria-current={pathname === item.href ? "page" : undefined}
               >
                 {pathname === item.href && (
@@ -79,7 +79,7 @@ export function Navigation() {
           <div className="flex items-center gap-2">
             <button
               onClick={toggleTheme}
-              className="flex h-11 w-11 items-center justify-center text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 focus-ring sm:h-9 sm:w-9"
+              className="flex h-11 w-11 items-center justify-center text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 sm:h-9 sm:w-9"
               aria-label={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
             >
               {theme === "light" ? (
@@ -111,7 +111,7 @@ export function Navigation() {
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="flex h-11 w-11 items-center justify-center text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300 focus-ring md:hidden"
+              className="flex h-11 w-11 items-center justify-center text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300 md:hidden"
               aria-label="Toggle menu"
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-menu"
@@ -178,7 +178,7 @@ export function Navigation() {
                     <Link
                       href={item.href}
                       onClick={() => setMobileMenuOpen(false)}
-                      className={`block px-4 py-2.5 text-sm font-normal transition-colors focus-ring ${
+                      className={`block px-4 py-2.5 text-sm font-normal transition-colors ${
                         pathname === item.href
                           ? "text-zinc-900 dark:text-zinc-100"
                           : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"

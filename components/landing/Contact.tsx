@@ -33,7 +33,7 @@ export function Contact({ profile }: ContactProps) {
         {profile.email && (
           <motion.a
             href={`mailto:${profile.email}`}
-            className="group flex items-center gap-3 rounded-lg border border-zinc-200 bg-white p-4 transition-all hover:border-zinc-300 focus-ring dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
+            className="group flex items-center gap-3 rounded-lg border border-zinc-200 bg-white p-4 transition-all hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             aria-label={`Send email to ${profile.email}`}
@@ -65,7 +65,7 @@ export function Contact({ profile }: ContactProps) {
                 href={url!}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex flex-col items-center gap-2 rounded-lg border border-zinc-200 bg-white p-4 text-center transition-all hover:border-zinc-300 focus-ring dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
+                className="group flex flex-col items-center gap-2 rounded-lg border border-zinc-200 bg-white p-4 text-center transition-all hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}

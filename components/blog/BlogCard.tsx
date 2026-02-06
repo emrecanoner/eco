@@ -22,7 +22,7 @@ export function BlogCard({ post, index }: BlogCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
     >
-      <Link href={`/blog/${post.slug}`} className="block focus-ring group">
+      <Link href={`/blog/${post.slug}`} className="block group">
         <Card className="overflow-hidden">
           <div className="space-y-4">
             {post.coverImage && post.coverImage.startsWith("http") && (

@@ -20,7 +20,7 @@ export function SelectDropdown({
       <select
         value={value}
         onChange={onChange}
-        className={`w-full appearance-none rounded-lg border border-zinc-200 bg-white px-3 pr-9 py-2.5 text-sm font-semibold text-zinc-700 transition-colors focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:focus:ring-zinc-100 sm:px-3 sm:pr-10 sm:py-1.5 sm:text-sm ${className}`}
+        className={`w-full appearance-none rounded-lg border border-zinc-200 bg-white px-3 pr-9 py-2.5 text-sm font-semibold text-zinc-700 transition-colors focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 sm:px-3 sm:pr-10 sm:py-1.5 sm:text-sm ${className}`}
         aria-label={ariaLabel}
       >
         {options.map((option) => (

@@ -20,7 +20,7 @@ export function ContactCard({ icon, label, href }: ContactCardProps) {
         href={href}
         target={href.startsWith("http") ? "_blank" : undefined}
         rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-        className="group block focus-ring"
+        className="group block"
         aria-label={`Visit ${label}`}
       >
             <div className="flex w-48 min-w-0 min-h-[140px] flex-col items-center justify-center rounded-lg border border-zinc-200 bg-white px-6 py-5 text-center transition-colors hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700 sm:w-56 sm:min-h-[160px] sm:p-6">
