@@ -68,7 +68,7 @@ export function MovieGrid({ movies }: MovieGridProps) {
   return (
     <div>
       <div className="mb-6 space-y-4 sm:mb-8">
-        <div className="overflow-x-auto -mx-1 sm:mx-0">
+        <div className="overflow-x-auto -mx-1 pb-2 sm:mx-0 sm:pb-0">
           <div className="flex gap-2 px-1 sm:flex-wrap sm:gap-3 sm:px-0">
             {(["all", "movie", "series", "top-rated", "recently-watched"] as const).map((filterType) => (
               <motion.button
