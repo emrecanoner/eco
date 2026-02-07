@@ -41,19 +41,23 @@ export function MovieCard({ movie, index }: MovieCardProps) {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="absolute inset-0 bg-zinc-900/80 p-4 flex flex-col justify-end"
+                  className="absolute inset-0 bg-zinc-900/80 flex flex-col justify-end"
                 >
-                  <h3 className="text-base font-semibold text-white mb-2 sm:text-lg">{movie.title}</h3>
-                  {movie.rating > 0 && (
-                    <div className="mb-2 text-xs text-yellow-300 sm:text-sm">
-                      {renderStars(movie.rating)}
+                  <div className="px-4 pb-4">
+                    <h3 className="text-base font-semibold text-white mb-2 sm:text-base break-normal">{movie.title}</h3>
+                    {movie.rating > 0 && (
+                      <div className="mb-2 text-xs text-yellow-300 sm:text-xs">
+                        {renderStars(movie.rating)}
+                      </div>
+                    )}
+                    <div className="flex flex-wrap gap-2 text-xs text-zinc-300 mb-2">
+                      {movie.year && <span>{movie.year}</span>}
+                      {movie.rating > 0 && <span>{movie.rating.toFixed(1)}/5</span>}
                     </div>
-                  )}
-                  <div className="flex flex-wrap gap-2 text-xs text-zinc-300">
-                    {movie.year && <span>{movie.year}</span>}
-                    {movie.rating > 0 && <span>{movie.rating.toFixed(1)}/5</span>}
                     {movie.genre && (
-                      <span className="rounded-full bg-zinc-800 px-2 py-0.5">{movie.genre}</span>
+                      <div className="text-xs text-zinc-300">
+                        <span className="rounded-full bg-zinc-800 px-2 py-0.5">{movie.genre}</span>
+                      </div>
                     )}
                   </div>
                 </motion.div>
