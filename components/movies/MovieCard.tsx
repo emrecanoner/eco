@@ -44,18 +44,18 @@ export function MovieCard({ movie, index }: MovieCardProps) {
                   className="absolute inset-0 bg-zinc-900/80 flex flex-col justify-end"
                 >
                   <div className="px-4 pb-4">
-                    <h3 className="text-base font-semibold text-white mb-2 sm:text-base break-normal">{movie.title}</h3>
+                    <h3 className="text-sm font-semibold text-white mb-2 sm:text-base break-normal">{movie.title}</h3>
                     {movie.rating > 0 && (
-                      <div className="mb-2 text-xs text-yellow-300 sm:text-xs">
+                      <div className="mb-2 text-[10px] text-yellow-300 sm:text-xs">
                         {renderStars(movie.rating)}
                       </div>
                     )}
-                    <div className="flex flex-wrap gap-2 text-xs text-zinc-300 mb-2">
+                    <div className="flex flex-wrap gap-2 text-[10px] text-zinc-300 mb-2 sm:text-xs">
                       {movie.year && <span>{movie.year}</span>}
                       {movie.rating > 0 && <span>{movie.rating.toFixed(1)}/5</span>}
                     </div>
                     {movie.genre && (
-                      <div className="text-xs text-zinc-300">
+                      <div className="text-[10px] text-zinc-300 sm:text-xs">
                         <span className="rounded-full bg-zinc-800 px-2 py-0.5">{movie.genre}</span>
                       </div>
                     )}
