@@ -41,10 +41,10 @@ export function MovieCard({ movie, index }: MovieCardProps) {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="absolute inset-0 bg-zinc-900/80 flex flex-col justify-end"
+                  className="absolute inset-0 bg-zinc-900/80"
                 >
-                  <div className="px-4 pb-4">
-                    <h3 className="text-sm font-semibold text-white mb-2 sm:text-base break-normal">{movie.title}</h3>
+                  <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4">
+                    <h3 className="text-sm font-semibold text-white mb-2 sm:text-base">{movie.title}</h3>
                     {movie.rating > 0 && (
                       <div className="mb-2 text-[10px] text-yellow-300 sm:text-xs">
                         {renderStars(movie.rating)}
