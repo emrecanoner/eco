@@ -23,10 +23,17 @@ export type SortOption =
   | "rating-desc" 
   | "rating-asc" 
   | "year-desc" 
-  | "year-asc";
+  | "year-asc"
+  | "title-asc"
+  | "title-desc";
+
+function isWatched(movie: Movie): boolean {
+  return (movie.status ?? "watched") === "watched";
+}
 
 export function calculateMovieStats(movies: Movie[]): MovieStats {
-  if (movies.length === 0) {
+  const watchedMovies = movies.filter(isWatched);
+  if (watchedMovies.length === 0) {
     return {
       total: 0,
       movies: 0,
@@ -38,28 +45,28 @@ export function calculateMovieStats(movies: Movie[]): MovieStats {
     };
   }
 
-  const moviesOnly = movies.filter((m) => m.type === "movie");
-  const seriesOnly = movies.filter((m) => m.type === "series");
+  const moviesOnly = watchedMovies.filter((m) => m.type === "movie");
+  const seriesOnly = watchedMovies.filter((m) => m.type === "series");
 
-  const ratings = movies.filter((m) => m.rating > 0).map((m) => m.rating);
+  const ratings = watchedMovies.filter((m) => m.rating > 0).map((m) => m.rating);
   const averageRating = ratings.length > 0
     ? ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length
     : 0;
 
-  const topRated = [...movies]
+  const topRated = [...watchedMovies]
     .filter((m) => m.rating > 0)
     .sort((a, b) => b.rating - a.rating)
     .slice(0, 5);
 
   const byYear: Record<number, number> = {};
-  movies.forEach((movie) => {
+  watchedMovies.forEach((movie) => {
     if (movie.year) {
       byYear[movie.year] = (byYear[movie.year] || 0) + 1;
     }
   });
 
   const genreCount: Record<string, number> = {};
-  movies.forEach((movie) => {
+  watchedMovies.forEach((movie) => {
     if (movie.genre) {
       genreCount[movie.genre] = (genreCount[movie.genre] || 0) + 1;
     }
@@ -71,7 +78,7 @@ export function calculateMovieStats(movies: Movie[]): MovieStats {
     .slice(0, 5);
 
   return {
-    total: movies.length,
+    total: watchedMovies.length,
     movies: moviesOnly.length,
     series: seriesOnly.length,
     averageRating,
@@ -125,6 +132,10 @@ export function sortMovies(movies: Movie[], sortBy: SortOption): Movie[] {
       return sorted.sort((a, b) => (b.year || 0) - (a.year || 0));
     case "year-asc":
       return sorted.sort((a, b) => (a.year || 0) - (b.year || 0));
+    case "title-asc":
+      return sorted.sort((a, b) => a.title.localeCompare(b.title));
+    case "title-desc":
+      return sorted.sort((a, b) => b.title.localeCompare(a.title));
     default:
       return sorted;
   }
@@ -132,6 +143,7 @@ export function sortMovies(movies: Movie[], sortBy: SortOption): Movie[] {
 
 export function getTopRated(movies: Movie[], limit = 10): Movie[] {
   return [...movies]
+    .filter(isWatched)
     .filter((m) => m.rating > 0)
     .sort((a, b) => b.rating - a.rating)
     .slice(0, limit);
@@ -139,6 +151,7 @@ export function getTopRated(movies: Movie[], limit = 10): Movie[] {
 
 export function getRecentlyWatched(movies: Movie[], limit = 10): Movie[] {
   return [...movies]
+    .filter(isWatched)
     .sort((a, b) => 
       new Date(b.watchedDate).getTime() - new Date(a.watchedDate).getTime()
     )
@@ -176,6 +189,7 @@ const FILTER_TYPE_LABELS: Record<string, string> = {
   series: "Series",
   "top-rated": "Top Rated",
   "recently-watched": "Recently Watched",
+  watchlist: "Watchlist",
 };
 
 export function getFilterTypeLabel(type: string): string {

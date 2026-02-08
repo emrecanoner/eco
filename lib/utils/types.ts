@@ -33,6 +33,7 @@ export interface Movie {
   id: string;
   title: string;
   type: "movie" | "series";
+  status: "watched" | "watchlist";
   rating: number;
   watchedDate: string;
   poster?: string;

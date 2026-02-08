@@ -13,7 +13,9 @@ interface MovieGridProps {
 }
 
 export function MovieGrid({ movies }: MovieGridProps) {
-  const [typeFilter, setTypeFilter] = useState<"all" | "movie" | "series" | "top-rated" | "recently-watched">("all");
+  const [typeFilter, setTypeFilter] = useState<
+    "all" | "movie" | "series" | "top-rated" | "recently-watched" | "watchlist"
+  >("all");
   const [genreFilter, setGenreFilter] = useState<string>("all");
   const [yearFilter, setYearFilter] = useState<string>("all");
   const [minRating, setMinRating] = useState<number>(0);
@@ -22,8 +24,15 @@ export function MovieGrid({ movies }: MovieGridProps) {
 
   const ITEMS_PER_PAGE = 16;
 
-  const uniqueGenres = useMemo(() => getUniqueGenres(movies), [movies]);
-  const uniqueYears = useMemo(() => getUniqueYears(movies), [movies]);
+  const isWatchlist = typeFilter === "watchlist";
+
+  const sourceMovies = useMemo(() => {
+    if (isWatchlist) return movies.filter((m) => m.status === "watchlist");
+    return movies.filter((m) => m.status !== "watchlist");
+  }, [movies, isWatchlist]);
+
+  const uniqueGenres = useMemo(() => getUniqueGenres(sourceMovies), [sourceMovies]);
+  const uniqueYears = useMemo(() => getUniqueYears(sourceMovies), [sourceMovies]);
 
   const filteredAndSorted = useMemo(() => {
     if (typeFilter === "top-rated") {
@@ -32,15 +41,30 @@ export function MovieGrid({ movies }: MovieGridProps) {
     if (typeFilter === "recently-watched") {
       return getRecentlyWatched(movies, 8);
     }
+    if (typeFilter === "watchlist") {
+      const watchlistMovies = movies.filter((m) => m.status === "watchlist");
+      const filtered = filterMovies(watchlistMovies, {
+        genres: genreFilter !== "all" ? [genreFilter] : undefined,
+        year: yearFilter !== "all" ? parseInt(yearFilter) : undefined,
+      });
+      return sortMovies(filtered, sortBy);
+    }
+    const watchedMovies = movies.filter((m) => m.status !== "watchlist");
     const filters: MovieFilters = {
       type: typeFilter === "all" ? undefined : typeFilter,
       genres: genreFilter !== "all" ? [genreFilter] : undefined,
       year: yearFilter !== "all" ? parseInt(yearFilter) : undefined,
       minRating: minRating > 0 ? minRating : undefined,
     };
-    const filtered = filterMovies(movies, filters);
+    const filtered = filterMovies(watchedMovies, filters);
     return sortMovies(filtered, sortBy);
   }, [movies, typeFilter, genreFilter, yearFilter, minRating, sortBy]);
+
+  useEffect(() => {
+    if (!isWatchlist) return;
+    setMinRating(0);
+    setSortBy((prev) => (prev.startsWith("rating-") ? "title-asc" : prev));
+  }, [isWatchlist]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -70,7 +94,7 @@ export function MovieGrid({ movies }: MovieGridProps) {
       <div className="mb-6 space-y-4 sm:mb-8">
         <div className="overflow-x-auto -mx-1 pb-2 sm:mx-0 sm:pb-0">
           <div className="flex gap-2 px-1 sm:flex-wrap sm:gap-3 sm:px-0">
-            {(["all", "movie", "series", "top-rated", "recently-watched"] as const).map((filterType) => (
+            {(["all", "movie", "series", "top-rated", "recently-watched", "watchlist"] as const).map((filterType) => (
               <motion.button
                 key={filterType}
                 onClick={() => setTypeFilter(filterType)}
@@ -95,6 +119,7 @@ export function MovieGrid({ movies }: MovieGridProps) {
           <SelectDropdown
             value={genreFilter}
             onChange={(e) => setGenreFilter(e.target.value)}
+            disabled={isSpecialFilter}
             options={[
               { value: "all", label: "All Genres" },
               ...uniqueGenres.map((genre) => ({ value: genre, label: genre })),
@@ -105,6 +130,7 @@ export function MovieGrid({ movies }: MovieGridProps) {
           <SelectDropdown
             value={yearFilter}
             onChange={(e) => setYearFilter(e.target.value)}
+            disabled={isSpecialFilter}
             options={[
               { value: "all", label: "All Years" },
               ...uniqueYears.map((year) => ({ value: year.toString(), label: year.toString() })),
@@ -115,6 +141,7 @@ export function MovieGrid({ movies }: MovieGridProps) {
           <SelectDropdown
             value={minRating}
             onChange={(e) => setMinRating(parseFloat(e.target.value))}
+            disabled={isWatchlist || isSpecialFilter}
             options={[
               { value: 0, label: "All Ratings" },
               { value: 4, label: "4+ Stars" },
@@ -127,13 +154,20 @@ export function MovieGrid({ movies }: MovieGridProps) {
           <SelectDropdown
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as SortOption)}
+            disabled={isSpecialFilter}
             options={[
               { value: "date-desc", label: "Newest First" },
               { value: "date-asc", label: "Oldest First" },
-              { value: "rating-desc", label: "Highest Rated" },
-              { value: "rating-asc", label: "Lowest Rated" },
+              ...(isWatchlist
+                ? []
+                : [
+                    { value: "rating-desc" as const, label: "Highest Rated" },
+                    { value: "rating-asc" as const, label: "Lowest Rated" },
+                  ]),
               { value: "year-desc", label: "Newest Year" },
               { value: "year-asc", label: "Oldest Year" },
+              { value: "title-asc", label: "Title A-Z" },
+              { value: "title-desc", label: "Title Z-A" },
             ]}
             ariaLabel="Sort movies"
           />

@@ -30,10 +30,12 @@ export async function getMovies(forceFetch = false): Promise<Movie[]> {
 
     const movies: Movie[] = results.map((page) => {
       const typeValue = extractProperty(page, NOTION_PROPERTIES.TYPE, "select")?.toLowerCase() || "movie";
+      const statusValue = extractProperty(page, NOTION_PROPERTIES.STATUS, "select")?.toLowerCase() || "watched";
       return {
         id: page.id,
         title: extractProperty(page, NOTION_PROPERTIES.TITLE, "title") || "",
         type: typeValue === "series" ? "series" : "movie",
+        status: statusValue === "watchlist" ? "watchlist" : "watched",
         rating: extractProperty(page, NOTION_PROPERTIES.RATING, "number") || 0,
         watchedDate: extractProperty(page, NOTION_PROPERTIES.WATCHED_DATE, "date") || "",
         poster: extractProperty(page, NOTION_PROPERTIES.POSTER, "url") || undefined,

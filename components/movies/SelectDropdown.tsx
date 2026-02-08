@@ -6,6 +6,7 @@ interface SelectDropdownProps {
   options: Array<{ value: string | number; label: string }>;
   ariaLabel: string;
   className?: string;
+  disabled?: boolean;
 }
 
 export function SelectDropdown({
@@ -14,13 +15,15 @@ export function SelectDropdown({
   options,
   ariaLabel,
   className = "",
+  disabled = false,
 }: SelectDropdownProps) {
   return (
     <div className="relative w-full sm:min-w-[120px]">
       <select
         value={value}
         onChange={onChange}
-        className={`w-full appearance-none rounded-lg border border-zinc-200 bg-white px-3 pr-9 py-2.5 text-sm font-semibold text-zinc-700 transition-colors focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 sm:px-3 sm:pr-10 sm:py-1.5 sm:text-sm ${className}`}
+        disabled={disabled}
+        className={`w-full appearance-none rounded-lg border border-zinc-200 bg-white px-3 py-2.5 pr-9 text-sm font-semibold text-zinc-700 transition-colors focus:outline-none disabled:cursor-not-allowed disabled:bg-zinc-50 disabled:text-zinc-400 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:disabled:bg-zinc-950 dark:disabled:text-zinc-600 sm:px-3 sm:py-1.5 sm:pr-10 sm:text-sm ${className}`}
         aria-label={ariaLabel}
       >
         {options.map((option) => (
