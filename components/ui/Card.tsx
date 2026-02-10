@@ -18,7 +18,6 @@ export function Card({ children, className = "", hover = true }: CardProps) {
           : ""
       }`}
       whileHover={hover ? { y: -1 } : undefined}
-      whileTap={hover ? { scale: 0.99 } : undefined}
       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
     >
       {children}

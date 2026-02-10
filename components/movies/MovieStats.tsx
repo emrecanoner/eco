@@ -44,11 +44,11 @@ export function MovieStats({ movies }: MovieStatsProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
-            <Card className="p-4 sm:p-6">
+            <Card className="h-full p-4 sm:p-6">
               <p className="mb-1 text-xs text-zinc-600 dark:text-zinc-400 sm:text-sm">
                 {stat.label}
               </p>
-              <p className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 sm:text-2xl">
+              <p className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 sm:text-2xl leading-tight">
                 {stat.value}
               </p>
               {stat.subtitle && (
