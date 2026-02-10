@@ -35,7 +35,7 @@ export function MovieStats({ movies }: MovieStatsProps) {
   ];
 
   return (
-    <div className="mb-12 space-y-6 sm:mb-16">
+    <div className="space-y-6">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {statCards.map((stat, index) => (
           <motion.div
