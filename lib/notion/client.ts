@@ -30,39 +30,67 @@ export async function queryDatabase(
   sorts?: NotionSort[],
   forceFetch?: boolean
 ): Promise<PageObjectResponse[]> {
-  const requestBody: {
+  const baseBody: {
     filter?: NotionFilter;
     sorts?: NotionSort[];
   } = {};
-  if (filter) requestBody.filter = filter;
-  if (sorts) requestBody.sorts = sorts;
-  
+
+  if (filter) baseBody.filter = filter;
+  if (sorts) baseBody.sorts = sorts;
+
   const url = `https://api.notion.com/v1/databases/${databaseId.trim()}/query`;
-  
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${process.env.NOTION_API_KEY}`,
-      "Notion-Version": NOTION_API_VERSION,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(requestBody),
-    cache: forceFetch ? "no-store" : "force-cache",
-  });
-  
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    if (response.status === 404) {
-      throw new Error(`Database not found. Please check your database ID and ensure the database is shared with your Notion integration.`);
+
+  const results: PageObjectResponse[] = [];
+  let cursor: string | undefined;
+  let hasMore = true;
+  let guard = 0;
+
+  while (hasMore) {
+    guard += 1;
+    if (guard > 1000) {
+      throw new Error("Notion API pagination exceeded safe limit.");
     }
-    if (response.status === 401) {
-      throw new Error(`Notion API authentication failed.`);
+
+    const body = cursor ? { ...baseBody, start_cursor: cursor } : baseBody;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.NOTION_API_KEY}`,
+        "Notion-Version": NOTION_API_VERSION,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+      cache: forceFetch ? "no-store" : "force-cache",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      if (response.status === 404) {
+        throw new Error(
+          "Database not found. Please check your database ID and ensure the database is shared with your Notion integration."
+        );
+      }
+      if (response.status === 401) {
+        throw new Error("Notion API authentication failed.");
+      }
+      throw new Error(`Notion API error: ${errorData.message || response.statusText}`);
     }
-    throw new Error(`Notion API error: ${errorData.message || response.statusText}`);
+
+    const data: {
+      results?: PageObjectResponse[];
+      has_more?: boolean;
+      next_cursor?: string | null;
+    } = await response.json();
+
+    if (Array.isArray(data.results)) {
+      results.push(...data.results);
+    }
+
+    hasMore = Boolean(data.has_more);
+    cursor = data.next_cursor || undefined;
   }
-  
-  const data = await response.json();
-  return data.results || [];
+
+  return results;
 }
 
 export async function getPage(pageId: string) {
