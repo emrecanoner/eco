@@ -67,6 +67,21 @@ export function MovieGrid({ movies }: MovieGridProps) {
   }, [isWatchlist]);
 
   useEffect(() => {
+    if (!isWatchlist) return;
+
+    if (genreFilter !== "all" && !uniqueGenres.includes(genreFilter)) {
+      setGenreFilter("all");
+    }
+
+    if (yearFilter !== "all") {
+      const yearValue = parseInt(yearFilter);
+      if (!uniqueYears.includes(yearValue)) {
+        setYearFilter("all");
+      }
+    }
+  }, [isWatchlist, genreFilter, yearFilter, uniqueGenres, uniqueYears]);
+
+  useEffect(() => {
     setCurrentPage(1);
   }, [typeFilter, genreFilter, yearFilter, minRating, sortBy]);
 
