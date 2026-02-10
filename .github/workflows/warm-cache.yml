@@ -33,7 +33,7 @@ jobs:
           echo "Polling: $HEALTH_URL"
 
           for i in {1..60}; do
-            code=$(curl -s -o /dev/null -w "%{http_code}" "$HEALTH_URL" || true)
+            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "$HEALTH_URL" || true)
             if [ "$code" = "200" ]; then
               echo "Production is ready."
               exit 0
@@ -52,7 +52,7 @@ jobs:
         run: |
           SYNC_URL="${PROD_BASE_URL%/}/api/notion/sync"
           echo "Warming cache via sync endpoint."
-          curl -sS --fail-with-body -X POST \
+          curl -sS --fail-with-body --max-time 60 --retry 3 --retry-all-errors -X POST \
             -H "Authorization: Bearer ${CRON_SECRET}" \
             "$SYNC_URL" > /dev/null
 

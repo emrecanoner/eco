@@ -130,7 +130,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Deployment
 
-For detailed deployment guide, see [DEPLOYMENT.md](./DEPLOYMENT.md).
+For detailed deployment guide, see [deployment.md](./deployment.md).
 
 ### Quick Start (Vercel)
 
@@ -161,7 +161,7 @@ For detailed deployment guide, see [DEPLOYMENT.md](./DEPLOYMENT.md).
    CRON_SECRET=your-secret-token-here
    ```
    
-   **Note**: `CRON_SECRET` is a security token you need to generate yourself. See [DEPLOYMENT.md](./DEPLOYMENT.md) for generation methods.
+   **Note**: `CRON_SECRET` is a security token you need to generate yourself. See [deployment.md](./deployment.md) for generation methods.
 
 4. **Deploy**
    - Click "Deploy" button
