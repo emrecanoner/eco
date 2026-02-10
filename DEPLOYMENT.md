@@ -76,6 +76,7 @@ NOTION_BLOG_DB=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 NOTION_MOVIES_DB=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 NOTION_BOOKS_DB=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 CRON_SECRET=your-secret-token-here-minimum-32-characters
+BLOB_READ_WRITE_TOKEN=vercel_blob_rw_xxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
    - For each variable:
@@ -112,6 +113,7 @@ vercel env add NOTION_BLOG_DB
 vercel env add NOTION_MOVIES_DB
 vercel env add NOTION_BOOKS_DB
 vercel env add CRON_SECRET
+vercel env add BLOB_READ_WRITE_TOKEN
 ```
 
 You'll be prompted to enter the value for each command.
@@ -168,6 +170,10 @@ After setting `CRON_SECRET` in Vercel environment variables:
   ```bash
   GET /api/cron?token=YOUR_CRON_SECRET
   ```
+- And for manual sync (deploy hooks friendly):
+  ```bash
+  POST /api/notion/sync?token=YOUR_CRON_SECRET
+  ```
 
 ## Post-Deployment Checks
 
@@ -189,6 +195,52 @@ After setting `CRON_SECRET` in Vercel environment variables:
   ```
   GET https://YOUR_DOMAIN.vercel.app/api/cron?token=YOUR_CRON_SECRET
   ```
+
+### 4. Persistent Cache (Recommended): Vercel Blob
+
+Local development uses file-system cache in `.cache/`. In production, you can enable a persistent cache with **Vercel Blob** so data is kept across deployments and instances.
+
+1. Vercel Dashboard → **Storage** → **Blob** → Create a store
+2. Create a **Read/Write token**
+3. Add it as an environment variable:
+
+```
+BLOB_READ_WRITE_TOKEN=vercel_blob_rw_xxx
+```
+
+When `BLOB_READ_WRITE_TOKEN` is set, the app automatically uses Blob for caching. If it is not set, it falls back to `.cache/`.
+
+## Warm Cache After Deployment (Recommended)
+
+Your Git integration already triggers a deploy automatically on every push. The remaining goal is: **when the deployment is READY**, trigger a Notion sync to warm the Blob cache.
+
+Important: Vercel **Deploy Hooks** (like `https://api.vercel.com/v1/integrations/deploy/...`) are used to **start a deployment**. They are not a post-deploy callback.
+
+### Option 1 (Best): Vercel Webhook on “Deployment Ready”
+
+If your Vercel project has **Webhooks** (deployment events), create a webhook for the “deployment ready/succeeded” event and set the target URL to:
+
+`https://YOUR_DOMAIN.vercel.app/api/notion/sync?token=YOUR_CRON_SECRET`
+
+This is the cleanest post-deploy warming solution.
+
+### Option 2: GitHub Actions (Post-deploy HTTP call)
+
+If you don't have Vercel deployment webhooks, you can call the sync endpoint from GitHub Actions after a push to your default branch (`main` or `master`). You can either:
+- wait a short time and call the production URL, or
+- poll until the deployment responds 200, then call sync.
+
+Target URL:
+`https://YOUR_DOMAIN.vercel.app/api/notion/sync?token=YOUR_CRON_SECRET`
+
+This repository includes a ready-to-use workflow:
+- `.github/workflows/warm-cache.yml`
+
+Setup in GitHub:
+1. Repository → Settings → Secrets and variables → Actions → New repository secret
+2. Add:
+   - `PROD_BASE_URL` (example: `https://YOUR_DOMAIN.vercel.app`)
+   - `CRON_SECRET` (same value as in Vercel env vars)
 
 ## Troubleshooting
 

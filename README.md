@@ -8,12 +8,14 @@ A minimal, modern personal portfolio website built with Next.js 14, TypeScript, 
 - **Portfolio Page**: Centralized hub for accessing Blog, Movies, and Books sections
 - **Blog**: Minimal blog layout with featured posts and individual post pages
 - **Movies & Shows**: Interactive card grid with hover details for watched content
+- **Watchlist**: Track movies/shows you want to watch (no rating, excluded from stats)
 - **Books**: Interactive card grid with hover details for reading list
 - **Contact Page**: Clean contact cards for email and social links
 - **Notion Integration**: All content is managed through Notion databases
 - **Settings Management**: Dynamic site title, favicon, and metadata from Notion
 - **Dark Mode**: Toggle between light and dark themes
 - **Automated Sync**: Vercel Cron Jobs automatically sync data from Notion
+- **Persistent Cache (Prod)**: Optional Vercel Blob cache to avoid fetching from Notion on page load
 
 ## Tech Stack
 
@@ -57,7 +59,12 @@ NOTION_BLOG_DB=xxx
 NOTION_MOVIES_DB=xxx
 NOTION_BOOKS_DB=xxx
 CRON_SECRET=your-secret-token-here
+BLOB_READ_WRITE_TOKEN=vercel_blob_rw_xxx
 ```
+
+`BLOB_READ_WRITE_TOKEN` is optional:
+- If set, the app uses **Vercel Blob** for caching (recommended for production).
+- If not set, the app falls back to local file-system cache in `.cache/` (good for local development).
 
 **Note**: `CRON_SECRET` is a security token you need to generate yourself. You can generate it using:
 ```bash
@@ -69,7 +76,7 @@ Or use any secure random string generator (minimum 32 characters).
 
 #### Settings Database
 - **Title** (Rich Text) - Site title (used in browser tab)
-- **Favicon** (URL) - Favicon image URL
+- **Favicon** (Files) - Favicon image (or URL)
 - **Site Name** (Rich Text) - Site name
 - **Description** (Rich Text) - Meta description
 - **Meta Tags** (Rich Text) - Additional meta tags (optional)
@@ -97,19 +104,20 @@ Or use any secure random string generator (minimum 32 characters).
 #### Movies Database
 - **Title** (Title)
 - **Type** (Select) - "movie" or "series"
-- **Rating** (Number) - 0-10
-- **Watched Date** (Date)
+- **Status** (Select) - "watched" or "watchlist"
+- **Rating** (Number) - 0-5 (watchlist items can be empty/0)
+- **Watched Date** (Date) - only for watched items
 - **Poster** (URL)
 - **Year** (Number)
-- **Genre** (Multi-select)
+- **Genre** (Select)
 
 #### Books Database
 - **Title** (Title)
 - **Author** (Rich Text)
-- **Rating** (Number) - 0-10
+- **Rating** (Number) - 0-5
 - **Read Date** (Date)
 - **Cover** (URL)
-- **Genre** (Multi-select)
+- **Genre** (Select)
 - **Pages** (Number)
 
 ### 5. Run Development Server
@@ -169,8 +177,9 @@ Manuel sync için:
 
 ```bash
 # POST endpoint
-POST /api/notion/sync
-Authorization: Bearer YOUR_CRON_SECRET
+POST /api/notion/sync?token=YOUR_CRON_SECRET
+# or:
+# Authorization: Bearer YOUR_CRON_SECRET
 
 # Veya GET endpoint (Vercel Cron)
 GET /api/cron?token=YOUR_CRON_SECRET

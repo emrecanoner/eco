@@ -12,8 +12,12 @@ export async function POST(request: Request) {
     const authHeader = request.headers.get("authorization");
     const expectedToken = process.env.CRON_SECRET;
 
-    if (expectedToken && authHeader !== `Bearer ${expectedToken}`) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (expectedToken) {
+      const url = new URL(request.url);
+      const token = url.searchParams.get("token");
+      if (token !== expectedToken && authHeader !== `Bearer ${expectedToken}`) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
     }
 
     await clearCache();

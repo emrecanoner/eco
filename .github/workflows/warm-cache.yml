@@ -1,0 +1,57 @@
+name: Warm Notion Cache (Prod)
+
+on:
+  push:
+    branches: ["main", "master"]
+  workflow_dispatch: {}
+
+concurrency:
+  group: warm-cache-prod
+  cancel-in-progress: true
+
+jobs:
+  warm-cache:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Mask secrets
+        shell: bash
+        run: |
+          echo "::add-mask::${{ secrets.CRON_SECRET }}"
+
+      - name: Wait for production to be ready
+        shell: bash
+        env:
+          PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
+        run: |
+          if [ -z "$PROD_BASE_URL" ]; then
+            echo "Missing PROD_BASE_URL secret"
+            exit 1
+          fi
+
+          HEALTH_URL="${PROD_BASE_URL%/}/api/settings"
+          echo "Polling: $HEALTH_URL"
+
+          for i in {1..60}; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" "$HEALTH_URL" || true)
+            if [ "$code" = "200" ]; then
+              echo "Production is ready."
+              exit 0
+            fi
+            sleep 5
+          done
+
+          echo "Timed out waiting for production readiness."
+          exit 1
+
+      - name: Warm cache via Notion sync
+        shell: bash
+        env:
+          PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          SYNC_URL="${PROD_BASE_URL%/}/api/notion/sync?token=${CRON_SECRET}"
+          echo "Warming cache via sync endpoint."
+          curl -sS --fail-with-body -X POST "$SYNC_URL" > /dev/null
+
+

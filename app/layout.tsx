@@ -47,6 +47,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
+        suppressHydrationWarning
         className={`${inter.variable} min-h-screen bg-white dark:bg-zinc-950 font-sans antialiased text-zinc-900 dark:text-zinc-100`}
         style={{ fontFamily: 'var(--font-inter)' }}
       >
