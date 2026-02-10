@@ -50,8 +50,10 @@ jobs:
           PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
         run: |
-          SYNC_URL="${PROD_BASE_URL%/}/api/notion/sync?token=${CRON_SECRET}"
+          SYNC_URL="${PROD_BASE_URL%/}/api/notion/sync"
           echo "Warming cache via sync endpoint."
-          curl -sS --fail-with-body -X POST "$SYNC_URL" > /dev/null
+          curl -sS --fail-with-body -X POST \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            "$SYNC_URL" > /dev/null
 
 

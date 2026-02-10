@@ -242,6 +242,8 @@ Setup in GitHub:
    - `PROD_BASE_URL` (example: `https://YOUR_DOMAIN.vercel.app`)
    - `CRON_SECRET` (same value as in Vercel env vars)
 
+Note: GitHub Actions can send request headers. The workflow uses `Authorization: Bearer CRON_SECRET` (preferred) to avoid putting the secret in the URL.
+
 ## Troubleshooting
 
 ### Build Errors
