@@ -23,25 +23,32 @@ jobs:
         shell: bash
         env:
           PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
+          GITHUB_SHA: ${{ github.sha }}
         run: |
           if [ -z "$PROD_BASE_URL" ]; then
             echo "Missing PROD_BASE_URL secret"
             exit 1
           fi
 
-          HEALTH_URL="${PROD_BASE_URL%/}/api/settings"
+          HEALTH_URL="${PROD_BASE_URL%/}/api/health"
           echo "Polling: $HEALTH_URL"
 
           for i in {1..60}; do
             code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "$HEALTH_URL" || true)
-            if [ "$code" = "200" ]; then
-              echo "Production is ready."
+            if [ "$code" != "200" ]; then
+              sleep 5
+              continue
+            fi
+
+            commitSha=$(curl -sS --max-time 10 "$HEALTH_URL" | python3 -c "import sys, json; print(json.load(sys.stdin).get('commitSha') or '')" || true)
+            if [ -n "$commitSha" ] && [ "$commitSha" = "$GITHUB_SHA" ]; then
+              echo "Production is ready (commit matches)."
               exit 0
             fi
             sleep 5
           done
 
-          echo "Timed out waiting for production readiness."
+          echo "Timed out waiting for production readiness (commit match)."
           exit 1
 
       - name: Warm cache via Notion sync
