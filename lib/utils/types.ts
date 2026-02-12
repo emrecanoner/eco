@@ -45,11 +45,13 @@ export interface Book {
   id: string;
   title: string;
   author: string;
+  status: "read" | "readlist" | "reading";
   rating: number;
   readDate: string;
   cover?: string;
   genre?: string;
   pages?: number;
+  year?: number;
 }
 
 export interface Settings {

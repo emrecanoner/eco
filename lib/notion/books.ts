@@ -28,16 +28,28 @@ export async function getBooks(forceFetch = false): Promise<Book[]> {
       forceFetch
     );
 
-    const books: Book[] = results.map((page) => ({
-      id: page.id,
-      title: extractProperty(page, NOTION_PROPERTIES.TITLE, "title") || "",
-      author: extractProperty(page, NOTION_PROPERTIES.AUTHOR, "rich_text") || "",
-      rating: extractProperty(page, NOTION_PROPERTIES.RATING, "number") || 0,
-      readDate: extractProperty(page, NOTION_PROPERTIES.READ_DATE, "date") || "",
-      cover: extractProperty(page, NOTION_PROPERTIES.COVER, "url") || undefined,
-      genre: extractProperty(page, NOTION_PROPERTIES.GENRE, "select") || undefined,
-      pages: extractProperty(page, NOTION_PROPERTIES.PAGES, "number") || undefined,
-    }));
+    const books: Book[] = results.map((page) => {
+      const statusValue = (extractProperty(page, NOTION_PROPERTIES.STATUS, "select") || "").toLowerCase();
+      const status: Book["status"] =
+        statusValue === "reading" || statusValue === "in progress"
+          ? "reading"
+          : statusValue === "readlist" || statusValue === "to read" || statusValue === "to-read"
+            ? "readlist"
+            : "read";
+
+      return {
+        id: page.id,
+        title: extractProperty(page, NOTION_PROPERTIES.TITLE, "title") || "",
+        author: extractProperty(page, NOTION_PROPERTIES.AUTHOR, "rich_text") || "",
+        status,
+        rating: extractProperty(page, NOTION_PROPERTIES.RATING, "number") || 0,
+        readDate: extractProperty(page, NOTION_PROPERTIES.READ_DATE, "date") || "",
+        cover: extractProperty(page, NOTION_PROPERTIES.COVER, "url") || undefined,
+        genre: extractProperty(page, NOTION_PROPERTIES.GENRE, "select") || undefined,
+        pages: extractProperty(page, NOTION_PROPERTIES.PAGES, "number") || undefined,
+        year: extractProperty(page, NOTION_PROPERTIES.YEAR, "number") || undefined,
+      };
+    });
 
     await setCachedData(cacheKey, books);
     return books;

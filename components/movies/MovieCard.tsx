@@ -5,7 +5,7 @@ import { Movie } from "@/lib/utils/types";
 import { Card } from "@/components/ui/Card";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { renderStars } from "@/lib/utils/movies";
+import { renderStars } from "@/lib/utils/ratings";
 
 interface MovieCardProps {
   movie: Movie;

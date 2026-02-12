@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from "react";
 import { Movie } from "@/lib/utils/types";
 import { MovieCard } from "./MovieCard";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { SelectDropdown } from "./SelectDropdown";
+import { SelectDropdown } from "@/components/ui/SelectDropdown";
 import { motion } from "framer-motion";
 import { filterMovies, sortMovies, getUniqueGenres, getUniqueYears, getTopRated, getRecentlyWatched, getFilterTypeLabel, type MovieFilters, type SortOption } from "@/lib/utils/movies";
 

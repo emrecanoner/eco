@@ -178,11 +178,6 @@ export function getUniqueYears(movies: Movie[]): number[] {
   return Array.from(years).sort((a, b) => b - a);
 }
 
-export function renderStars(rating: number): string {
-  const fullStars = Math.floor(rating);
-  return "⭐".repeat(fullStars) + "☆".repeat(5 - fullStars);
-}
-
 const FILTER_TYPE_LABELS: Record<string, string> = {
   all: "All",
   movie: "Movies",
