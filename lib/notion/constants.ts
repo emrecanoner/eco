@@ -23,6 +23,7 @@ export const NOTION_PROPERTIES = {
   
   // Movies
   TYPE: "Type",
+  DIRECTOR: "Director",
   RATING: "Rating",
   WATCHED_DATE: "Watched Date",
   POSTER: "Poster",

@@ -39,6 +39,7 @@ export interface Movie {
   poster?: string;
   year?: number;
   genre?: string;
+  director?: string;
 }
 
 export interface Book {

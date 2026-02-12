@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { Movie } from "@/lib/utils/types";
 import { Card } from "@/components/ui/Card";
+import { InlineMeta } from "@/components/ui/InlineMeta";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { renderStars } from "@/lib/utils/ratings";
 
 interface MovieCardProps {
   movie: Movie;
@@ -45,17 +45,9 @@ export function MovieCard({ movie, index }: MovieCardProps) {
                 >
                   <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4">
                     <h3 className="text-sm font-semibold text-white mb-2 sm:text-base">{movie.title}</h3>
-                    {movie.rating > 0 && (
-                      <div className="mb-2 text-[10px] text-yellow-300 sm:text-xs">
-                        {renderStars(movie.rating)}
-                      </div>
-                    )}
-                    <div className="flex flex-wrap gap-2 text-[10px] text-zinc-300 mb-2 sm:text-xs">
-                      {movie.year && <span>{movie.year}</span>}
-                      {movie.rating > 0 && <span>{movie.rating.toFixed(1)}/5</span>}
-                    </div>
+                    <InlineMeta left={movie.director} right={movie.year} />
                     {movie.genre && (
-                      <div className="text-[10px] text-zinc-300 sm:text-xs">
+                      <div className="mt-2 text-[10px] text-zinc-300 sm:text-xs">
                         <span className="rounded-full bg-zinc-800 px-2 py-0.5">{movie.genre}</span>
                       </div>
                     )}

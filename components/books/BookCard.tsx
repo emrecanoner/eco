@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { Book } from "@/lib/utils/types";
 import { Card } from "@/components/ui/Card";
+import { InlineMeta } from "@/components/ui/InlineMeta";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { renderStars } from "@/lib/utils/ratings";
 
 interface BookCardProps {
   book: Book;
@@ -46,21 +46,13 @@ export function BookCard({ book, index }: BookCardProps) {
                   <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4">
                     <h3 className="mb-2 text-sm font-semibold text-white sm:text-base">{book.title}</h3>
 
-                    <div className="mb-2 text-[10px] text-zinc-300 sm:text-xs">
-                      {book.author}
-                    </div>
+                    <InlineMeta left={book.author} right={book.year} />
 
-                    {book.status === "read" && book.rating > 0 && (
-                      <div className="mb-2 text-[10px] text-yellow-300 sm:text-xs">
-                        {renderStars(book.rating)}
+                    {book.pages && (
+                      <div className="mt-2 text-[10px] text-zinc-300 sm:text-xs">
+                        {book.pages} pages
                       </div>
                     )}
-
-                    <div className="flex flex-wrap gap-2 text-[10px] text-zinc-300 sm:text-xs">
-                      {book.year && <span>{book.year}</span>}
-                      {book.status === "read" && book.rating > 0 && <span>{book.rating.toFixed(1)}/5</span>}
-                      {book.pages && <span>{book.pages} pages</span>}
-                    </div>
 
                     {book.genre && (
                       <div className="mt-2 text-[10px] text-zinc-300 sm:text-xs">

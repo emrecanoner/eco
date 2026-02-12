@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { Movie } from "@/lib/utils/types";
 import { MovieCard } from "./MovieCard";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -13,6 +13,7 @@ interface MovieGridProps {
 }
 
 export function MovieGrid({ movies }: MovieGridProps) {
+  const shouldScrollToTopOnPageChange = useRef(false);
   const [typeFilter, setTypeFilter] = useState<
     "all" | "movie" | "series" | "top-rated" | "recently-watched" | "watchlist"
   >("all");
@@ -99,6 +100,12 @@ export function MovieGrid({ movies }: MovieGridProps) {
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE + 1;
   const endIndex = Math.min(currentPage * ITEMS_PER_PAGE, filteredAndSorted.length);
+
+  useEffect(() => {
+    if (!shouldScrollToTopOnPageChange.current) return;
+    shouldScrollToTopOnPageChange.current = false;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentPage]);
 
   if (movies.length === 0) {
     return <EmptyState message="No movies or shows available yet." />;
@@ -206,7 +213,10 @@ export function MovieGrid({ movies }: MovieGridProps) {
               </p>
               <div className="flex items-center gap-2">
                 <motion.button
-                  onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                  onClick={() => {
+                    shouldScrollToTopOnPageChange.current = true;
+                    setCurrentPage((prev) => Math.max(1, prev - 1));
+                  }}
                   disabled={currentPage === 1}
                   className={`rounded-lg border border-zinc-200 bg-white px-4 py-2 text-xs font-semibold transition-colors focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 sm:px-5 sm:py-2.5 sm:text-sm ${
                     currentPage === 1
@@ -222,7 +232,10 @@ export function MovieGrid({ movies }: MovieGridProps) {
                   Previous
                 </motion.button>
                 <motion.button
-                  onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                  onClick={() => {
+                    shouldScrollToTopOnPageChange.current = true;
+                    setCurrentPage((prev) => Math.min(totalPages, prev + 1));
+                  }}
                   disabled={currentPage === totalPages}
                   className={`rounded-lg border border-zinc-200 bg-white px-4 py-2 text-xs font-semibold transition-colors focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 sm:px-5 sm:py-2.5 sm:text-sm ${
                     currentPage === totalPages

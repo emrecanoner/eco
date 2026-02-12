@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Book } from "@/lib/utils/types";
 import { BookCard } from "./BookCard";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -23,6 +23,7 @@ interface BookGridProps {
 }
 
 export function BookGrid({ books }: BookGridProps) {
+  const shouldScrollToTopOnPageChange = useRef(false);
   const [statusFilter, setStatusFilter] = useState<
     "all" | "top-rated" | "recently-read" | "readlist" | "reading"
   >("all");
@@ -106,6 +107,12 @@ export function BookGrid({ books }: BookGridProps) {
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE + 1;
   const endIndex = Math.min(currentPage * ITEMS_PER_PAGE, filteredAndSorted.length);
+
+  useEffect(() => {
+    if (!shouldScrollToTopOnPageChange.current) return;
+    shouldScrollToTopOnPageChange.current = false;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentPage]);
 
   if (books.length === 0) {
     return <EmptyState message="No books available yet." />;
@@ -213,7 +220,10 @@ export function BookGrid({ books }: BookGridProps) {
               </p>
               <div className="flex items-center gap-2">
                 <motion.button
-                  onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                  onClick={() => {
+                    shouldScrollToTopOnPageChange.current = true;
+                    setCurrentPage((prev) => Math.max(1, prev - 1));
+                  }}
                   disabled={currentPage === 1}
                   className={`rounded-lg border border-zinc-200 bg-white px-4 py-2 text-xs font-semibold transition-colors focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 sm:px-5 sm:py-2.5 sm:text-sm ${
                     currentPage === 1
@@ -229,7 +239,10 @@ export function BookGrid({ books }: BookGridProps) {
                   Previous
                 </motion.button>
                 <motion.button
-                  onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                  onClick={() => {
+                    shouldScrollToTopOnPageChange.current = true;
+                    setCurrentPage((prev) => Math.min(totalPages, prev + 1));
+                  }}
                   disabled={currentPage === totalPages}
                   className={`rounded-lg border border-zinc-200 bg-white px-4 py-2 text-xs font-semibold transition-colors focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 sm:px-5 sm:py-2.5 sm:text-sm ${
                     currentPage === totalPages

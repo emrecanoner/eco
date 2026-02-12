@@ -36,6 +36,7 @@ export async function getMovies(forceFetch = false): Promise<Movie[]> {
         title: extractProperty(page, NOTION_PROPERTIES.TITLE, "title") || "",
         type: typeValue === "series" ? "series" : "movie",
         status: statusValue === "watchlist" ? "watchlist" : "watched",
+        director: extractProperty(page, NOTION_PROPERTIES.DIRECTOR, "rich_text") || undefined,
         rating: extractProperty(page, NOTION_PROPERTIES.RATING, "number") || 0,
         watchedDate: extractProperty(page, NOTION_PROPERTIES.WATCHED_DATE, "date") || "",
         poster: extractProperty(page, NOTION_PROPERTIES.POSTER, "url") || undefined,
