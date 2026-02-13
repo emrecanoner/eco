@@ -56,7 +56,7 @@ export function StatsModal({ isOpen, onClose, books }: StatsModalProps) {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="relative w-full max-w-2xl sm:max-w-3xl lg:max-w-5xl max-h-[90vh] overflow-y-auto rounded-lg border border-zinc-200 bg-white p-6 shadow-xl dark:border-zinc-800 dark:bg-zinc-900 sm:p-8"
+              className="relative w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl max-h-[90vh] overflow-y-auto rounded-lg border border-zinc-200 bg-white p-6 shadow-xl dark:border-zinc-800 dark:bg-zinc-900 sm:p-8"
               onClick={(e) => e.stopPropagation()}
               role="dialog"
               aria-modal="true"

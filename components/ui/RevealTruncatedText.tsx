@@ -4,11 +4,13 @@ import { useEffect, useRef, useState } from "react";
 
 interface RevealTruncatedTextProps {
   text?: string | null;
+  lines?: 1 | 2;
   tooltipMaxWidthClassName?: string;
 }
 
 export function RevealTruncatedText({
   text,
+  lines = 1,
   tooltipMaxWidthClassName = "max-w-[260px]",
 }: RevealTruncatedTextProps) {
   const [open, setOpen] = useState(false);
@@ -38,7 +40,8 @@ export function RevealTruncatedText({
   const onToggle = () => {
     const el = buttonRef.current;
     if (!el) return;
-    const truncated = el.scrollWidth > el.clientWidth + 1;
+    const truncated =
+      el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1;
     if (!truncated) return;
     setOpen((v) => !v);
   };
@@ -49,7 +52,18 @@ export function RevealTruncatedText({
         ref={buttonRef}
         type="button"
         onClick={onToggle}
-        className="block w-full truncate text-left focus:outline-none"
+        className={`block w-full text-left focus:outline-none ${
+          lines === 1 ? "truncate" : "overflow-hidden"
+        }`}
+        style={
+          lines === 2
+            ? {
+                display: "-webkit-box",
+                WebkitBoxOrient: "vertical",
+                WebkitLineClamp: 2,
+              }
+            : undefined
+        }
         aria-label="Show full text"
         aria-expanded={open}
       >

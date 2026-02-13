@@ -42,7 +42,7 @@ export function MovieStats({ movies }: MovieStatsProps) {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {statCards.map((stat, index) => (
           <motion.div
             key={stat.label}
@@ -56,7 +56,7 @@ export function MovieStats({ movies }: MovieStatsProps) {
               </p>
               <div className="min-w-0 text-xl font-semibold text-zinc-900 dark:text-zinc-100 sm:text-2xl leading-tight">
                 {stat.label === "Top Genre" || stat.label === "Top Director" ? (
-                  <RevealTruncatedText text={stat.value} />
+                  <RevealTruncatedText text={stat.value} lines={2} />
                 ) : (
                   <span>{stat.value}</span>
                 )}
