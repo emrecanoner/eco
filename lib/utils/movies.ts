@@ -5,9 +5,9 @@ export interface MovieStats {
   movies: number;
   series: number;
   averageRating: number;
-  topRated: Movie[];
   byYear: Record<number, number>;
   topGenres: Array<{ genre: string; count: number }>;
+  topDirectors: Array<{ director: string; count: number }>;
 }
 
 export interface MovieFilters {
@@ -39,9 +39,9 @@ export function calculateMovieStats(movies: Movie[]): MovieStats {
       movies: 0,
       series: 0,
       averageRating: 0,
-      topRated: [],
       byYear: {},
       topGenres: [],
+      topDirectors: [],
     };
   }
 
@@ -52,11 +52,6 @@ export function calculateMovieStats(movies: Movie[]): MovieStats {
   const averageRating = ratings.length > 0
     ? ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length
     : 0;
-
-  const topRated = [...watchedMovies]
-    .filter((m) => m.rating > 0)
-    .sort((a, b) => b.rating - a.rating)
-    .slice(0, 5);
 
   const byYear: Record<number, number> = {};
   watchedMovies.forEach((movie) => {
@@ -77,14 +72,26 @@ export function calculateMovieStats(movies: Movie[]): MovieStats {
     .sort((a, b) => b.count - a.count)
     .slice(0, 5);
 
+  const directorCount: Record<string, number> = {};
+  watchedMovies.forEach((movie) => {
+    if (movie.director) {
+      directorCount[movie.director] = (directorCount[movie.director] || 0) + 1;
+    }
+  });
+
+  const topDirectors = Object.entries(directorCount)
+    .map(([director, count]) => ({ director, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 5);
+
   return {
     total: watchedMovies.length,
     movies: moviesOnly.length,
     series: seriesOnly.length,
     averageRating,
-    topRated,
     byYear,
     topGenres,
+    topDirectors,
   };
 }
 

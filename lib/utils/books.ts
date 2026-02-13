@@ -3,8 +3,8 @@ import { Book } from "./types";
 export interface BookStats {
   total: number;
   averageRating: number;
-  topRated: Book[];
   topGenres: Array<{ genre: string; count: number }>;
+  topAuthors: Array<{ author: string; count: number }>;
 }
 
 export interface BookFilters {
@@ -38,19 +38,14 @@ export function calculateBookStats(books: Book[]): BookStats {
     return {
       total: 0,
       averageRating: 0,
-      topRated: [],
       topGenres: [],
+      topAuthors: [],
     };
   }
 
   const ratings = readBooks.filter((b) => b.rating > 0).map((b) => b.rating);
   const averageRating =
     ratings.length > 0 ? ratings.reduce((sum, r) => sum + r, 0) / ratings.length : 0;
-
-  const topRated = [...readBooks]
-    .filter((b) => b.rating > 0)
-    .sort((a, b) => b.rating - a.rating)
-    .slice(0, 5);
 
   const genreCount: Record<string, number> = {};
   readBooks.forEach((b) => {
@@ -64,11 +59,23 @@ export function calculateBookStats(books: Book[]): BookStats {
     .sort((a, b) => b.count - a.count)
     .slice(0, 5);
 
+  const authorCount: Record<string, number> = {};
+  readBooks.forEach((b) => {
+    if (b.author) {
+      authorCount[b.author] = (authorCount[b.author] || 0) + 1;
+    }
+  });
+
+  const topAuthors = Object.entries(authorCount)
+    .map(([author, count]) => ({ author, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 5);
+
   return {
     total: readBooks.length,
     averageRating,
-    topRated,
     topGenres,
+    topAuthors,
   };
 }
 
