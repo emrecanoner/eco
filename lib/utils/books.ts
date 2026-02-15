@@ -11,6 +11,7 @@ export interface BookFilters {
   genres?: string[];
   year?: number;
   minRating?: number;
+  author?: string;
 }
 
 export type BookSortOption =
@@ -50,7 +51,9 @@ export function calculateBookStats(books: Book[]): BookStats {
   const genreCount: Record<string, number> = {};
   readBooks.forEach((b) => {
     if (b.genre) {
-      genreCount[b.genre] = (genreCount[b.genre] || 0) + 1;
+      b.genre.forEach((g) => {
+        genreCount[g] = (genreCount[g] || 0) + 1;
+      });
     }
   });
 
@@ -83,7 +86,9 @@ export function filterBooks(books: Book[], filters: BookFilters): Book[] {
   let filtered = [...books];
 
   if (filters.genres && filters.genres.length > 0) {
-    filtered = filtered.filter((b) => b.genre && filters.genres!.includes(b.genre));
+    filtered = filtered.filter((b) =>
+      b.genre && b.genre.some((g) => filters.genres!.includes(g))
+    );
   }
 
   if (filters.year) {
@@ -92,6 +97,10 @@ export function filterBooks(books: Book[], filters: BookFilters): Book[] {
 
   if (filters.minRating !== undefined) {
     filtered = filtered.filter((b) => b.rating >= filters.minRating!);
+  }
+
+  if (filters.author) {
+    filtered = filtered.filter((b) => b.author === filters.author);
   }
 
   return filtered;
@@ -140,7 +149,9 @@ export function getRecentlyReadBooks(books: Book[], limit = 8): Book[] {
 export function getUniqueGenres(books: Book[]): string[] {
   const genres = new Set<string>();
   books.forEach((b) => {
-    if (b.genre) genres.add(b.genre);
+    if (b.genre) {
+      b.genre.forEach((g) => genres.add(g));
+    }
   });
   return Array.from(genres).sort();
 }
@@ -151,6 +162,16 @@ export function getUniqueYears(books: Book[]): number[] {
     if (b.year) years.add(b.year);
   });
   return Array.from(years).sort((a, b) => b - a);
+}
+
+export function getUniqueAuthors(books: Book[]): string[] {
+  const authors = new Set<string>();
+  books.forEach((b) => {
+    if (b.author) {
+      authors.add(b.author);
+    }
+  });
+  return Array.from(authors).sort();
 }
 
 const FILTER_LABELS: Record<string, string> = {
@@ -164,5 +185,3 @@ const FILTER_LABELS: Record<string, string> = {
 export function getBookFilterLabel(filter: string): string {
   return FILTER_LABELS[filter] || filter;
 }
-
-

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Movie } from "@/lib/utils/types";
 import { Card } from "@/components/ui/Card";
 import { InlineMeta } from "@/components/ui/InlineMeta";
+import { RevealTruncatedText } from "@/components/ui/RevealTruncatedText";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -46,9 +47,9 @@ export function MovieCard({ movie, index }: MovieCardProps) {
                   <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4">
                     <h3 className="text-sm font-semibold text-white mb-2 sm:text-base">{movie.title}</h3>
                     <InlineMeta left={movie.director} right={movie.year} />
-                    {movie.genre && (
-                      <div className="mt-2 text-[10px] text-zinc-300 sm:text-xs">
-                        <span className="rounded-full bg-zinc-800 px-2 py-0.5">{movie.genre}</span>
+                    {movie.genre && movie.genre.length > 0 && (
+                      <div className="mt-1.5 text-[10px] text-zinc-400 sm:text-xs">
+                        <RevealTruncatedText text={movie.genre.join(", ")} direction="above" />
                       </div>
                     )}
                   </div>

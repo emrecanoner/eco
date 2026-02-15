@@ -38,7 +38,7 @@ export interface Movie {
   watchedDate: string;
   poster?: string;
   year?: number;
-  genre?: string;
+  genre?: string[];
   director?: string;
 }
 
@@ -50,7 +50,7 @@ export interface Book {
   rating: number;
   readDate: string;
   cover?: string;
-  genre?: string;
+  genre?: string[];
   pages?: number;
   year?: number;
 }

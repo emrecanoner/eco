@@ -41,7 +41,7 @@ export async function getMovies(forceFetch = false): Promise<Movie[]> {
         watchedDate: extractProperty(page, NOTION_PROPERTIES.WATCHED_DATE, "date") || "",
         poster: extractProperty(page, NOTION_PROPERTIES.POSTER, "url") || undefined,
         year: extractProperty(page, NOTION_PROPERTIES.YEAR, "number") || undefined,
-        genre: extractProperty(page, NOTION_PROPERTIES.GENRE, "select") || undefined,
+        genre: (() => { const g = extractProperty(page, NOTION_PROPERTIES.GENRE, "multi_select"); return g && g.length > 0 ? g : undefined; })(),
       };
     });
 

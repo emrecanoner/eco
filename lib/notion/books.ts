@@ -45,7 +45,7 @@ export async function getBooks(forceFetch = false): Promise<Book[]> {
         rating: extractProperty(page, NOTION_PROPERTIES.RATING, "number") || 0,
         readDate: extractProperty(page, NOTION_PROPERTIES.READ_DATE, "date") || "",
         cover: extractProperty(page, NOTION_PROPERTIES.COVER, "url") || undefined,
-        genre: extractProperty(page, NOTION_PROPERTIES.GENRE, "select") || undefined,
+        genre: (() => { const g = extractProperty(page, NOTION_PROPERTIES.GENRE, "multi_select"); return g && g.length > 0 ? g : undefined; })(),
         pages: extractProperty(page, NOTION_PROPERTIES.PAGES, "number") || undefined,
         year: extractProperty(page, NOTION_PROPERTIES.YEAR, "number") || undefined,
       };

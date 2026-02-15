@@ -15,6 +15,7 @@ export interface MovieFilters {
   genres?: string[];
   year?: number;
   minRating?: number;
+  director?: string;
 }
 
 export type SortOption = 
@@ -63,7 +64,9 @@ export function calculateMovieStats(movies: Movie[]): MovieStats {
   const genreCount: Record<string, number> = {};
   watchedMovies.forEach((movie) => {
     if (movie.genre) {
-      genreCount[movie.genre] = (genreCount[movie.genre] || 0) + 1;
+      movie.genre.forEach((g) => {
+        genreCount[g] = (genreCount[g] || 0) + 1;
+      });
     }
   });
 
@@ -103,8 +106,8 @@ export function filterMovies(movies: Movie[], filters: MovieFilters): Movie[] {
   }
 
   if (filters.genres && filters.genres.length > 0) {
-    filtered = filtered.filter((m) => 
-      m.genre && filters.genres!.includes(m.genre)
+    filtered = filtered.filter((m) =>
+      m.genre && m.genre.some((g) => filters.genres!.includes(g))
     );
   }
 
@@ -114,6 +117,10 @@ export function filterMovies(movies: Movie[], filters: MovieFilters): Movie[] {
 
   if (filters.minRating !== undefined) {
     filtered = filtered.filter((m) => m.rating >= filters.minRating!);
+  }
+
+  if (filters.director) {
+    filtered = filtered.filter((m) => m.director === filters.director);
   }
 
   return filtered;
@@ -169,7 +176,7 @@ export function getUniqueGenres(movies: Movie[]): string[] {
   const genres = new Set<string>();
   movies.forEach((movie) => {
     if (movie.genre) {
-      genres.add(movie.genre);
+      movie.genre.forEach((g) => genres.add(g));
     }
   });
   return Array.from(genres).sort();
@@ -185,6 +192,16 @@ export function getUniqueYears(movies: Movie[]): number[] {
   return Array.from(years).sort((a, b) => b - a);
 }
 
+export function getUniqueDirectors(movies: Movie[]): string[] {
+  const directors = new Set<string>();
+  movies.forEach((movie) => {
+    if (movie.director) {
+      directors.add(movie.director);
+    }
+  });
+  return Array.from(directors).sort();
+}
+
 const FILTER_TYPE_LABELS: Record<string, string> = {
   all: "All",
   movie: "Movies",
@@ -197,4 +214,3 @@ const FILTER_TYPE_LABELS: Record<string, string> = {
 export function getFilterTypeLabel(type: string): string {
   return FILTER_TYPE_LABELS[type] || type;
 }
-
