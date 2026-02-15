@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Book } from "@/lib/utils/types";
 import { BookCard } from "./BookCard";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -18,6 +18,7 @@ import {
   type BookFilters,
   type BookSortOption,
 } from "@/lib/utils/books";
+import { useGridColumns, getCardDirection } from "@/lib/hooks/useGridColumns";
 
 interface BookGridProps {
   books: Book[];
@@ -25,6 +26,32 @@ interface BookGridProps {
 
 export function BookGrid({ books }: BookGridProps) {
   const shouldScrollToTopOnPageChange = useRef(false);
+  const cols = useGridColumns();
+  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  const handleCardSelect = useCallback((id: string) => {
+    setSelectedCardId((prev) => (prev === id ? null : id));
+  }, []);
+
+  useEffect(() => {
+    if (!selectedCardId) return;
+    const handleClick = (e: MouseEvent) => {
+      if (gridRef.current && !gridRef.current.contains(e.target as Node)) {
+        setSelectedCardId(null);
+      }
+    };
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedCardId(null);
+    };
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [selectedCardId]);
+
   const [statusFilter, setStatusFilter] = useState<
     "all" | "top-rated" | "recently-read" | "readlist" | "reading"
   >("all");
@@ -276,9 +303,16 @@ export function BookGrid({ books }: BookGridProps) {
         <EmptyState message="No books match your filters." />
       ) : (
         <>
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div ref={gridRef} className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" style={{ overflow: "visible" }}>
             {paginatedBooks.map((book, index) => (
-              <BookCard key={book.id} book={book} index={index} />
+              <BookCard
+                key={book.id}
+                book={book}
+                index={index}
+                isSelected={selectedCardId === book.id}
+                direction={getCardDirection(index, cols)}
+                onSelect={handleCardSelect}
+              />
             ))}
           </div>
 

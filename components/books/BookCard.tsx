@@ -1,29 +1,28 @@
 "use client";
 
-import { useState } from "react";
 import { Book } from "@/lib/utils/types";
 import { Card } from "@/components/ui/Card";
-import { InlineMeta } from "@/components/ui/InlineMeta";
-import { RevealTruncatedText } from "@/components/ui/RevealTruncatedText";
+import { CardDetailPanel } from "@/components/ui/CardDetailPanel";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface BookCardProps {
   book: Book;
   index: number;
+  isSelected: boolean;
+  direction: "left" | "right";
+  onSelect: (id: string) => void;
 }
 
-export function BookCard({ book, index }: BookCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
+export function BookCard({ book, index, isSelected, direction, onSelect }: BookCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className="relative"
+      onClick={() => onSelect(book.id)}
+      className="relative cursor-pointer"
+      style={{ overflow: "visible" }}
     >
       <Card className="overflow-hidden p-0">
         {book.cover && book.cover.startsWith("http") ? (
@@ -33,38 +32,9 @@ export function BookCard({ book, index }: BookCardProps) {
               alt={book.title}
               fill
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              className="object-cover transition-transform duration-300"
-              style={{ transform: isHovered ? "scale(1.05)" : "scale(1)" }}
+              className="object-cover"
             />
-            <AnimatePresence>
-              {isHovered && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="absolute inset-0 bg-zinc-900/80"
-                >
-                  <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4">
-                    <h3 className="mb-2 text-sm font-semibold text-white sm:text-base">{book.title}</h3>
-
-                    <InlineMeta left={book.author} right={book.year} />
-
-                    {book.pages && (
-                      <div className="mt-2 text-[10px] text-zinc-300 sm:text-xs">
-                        {book.pages} pages
-                      </div>
-                    )}
-
-                    {book.genre && book.genre.length > 0 && (
-                      <div className="mt-1.5 text-[10px] text-zinc-400 sm:text-xs">
-                        <RevealTruncatedText text={book.genre.join(", ")} direction="above" />
-                      </div>
-                    )}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-            {book.status === "read" && book.rating > 0 && !isHovered && (
+            {book.status === "read" && book.rating > 0 && !isSelected && (
               <div className="absolute right-2 top-2 rounded-full bg-black/80 px-2 py-1 text-xs font-bold text-white">
                 ⭐ {book.rating.toFixed(1)}
               </div>
@@ -76,7 +46,25 @@ export function BookCard({ book, index }: BookCardProps) {
           </div>
         )}
       </Card>
+
+      <div style={{ pointerEvents: isSelected ? "auto" : "none" }}>
+        <AnimatePresence>
+          {isSelected && (
+            <CardDetailPanel
+              direction={direction}
+              title={book.title}
+              rating={book.status === "read" ? book.rating : undefined}
+              details={[
+                { label: "Author", value: book.author },
+                { label: "Year", value: book.year },
+                { label: "Pages", value: book.pages },
+              ]}
+              genres={book.genre}
+              onClose={() => onSelect(book.id)}
+            />
+          )}
+        </AnimatePresence>
+      </div>
     </motion.div>
   );
 }
-

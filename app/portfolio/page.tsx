@@ -26,7 +26,7 @@ const portfolioItems = [
 export default function PortfolioPage() {
   return (
     <Container>
-      <div className="flex min-h-[calc(100vh-12rem)] items-center justify-center py-12 sm:min-h-[calc(100vh-14rem)] sm:py-16">
+      <div className="flex min-h-[calc(100dvh-12rem)] items-center justify-center py-12 sm:min-h-[calc(100dvh-14rem)] sm:py-16">
         <div className="w-full max-w-2xl space-y-3 sm:space-y-4">
           {portfolioItems.map((item, index) => (
             <motion.div

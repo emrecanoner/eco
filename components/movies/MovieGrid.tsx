@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { Movie } from "@/lib/utils/types";
 import { MovieCard } from "./MovieCard";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { SelectDropdown } from "@/components/ui/SelectDropdown";
 import { motion, AnimatePresence } from "framer-motion";
 import { filterMovies, sortMovies, getUniqueGenres, getUniqueYears, getUniqueDirectors, getTopRated, getRecentlyWatched, getFilterTypeLabel, type MovieFilters, type SortOption } from "@/lib/utils/movies";
+import { useGridColumns, getCardDirection } from "@/lib/hooks/useGridColumns";
 
 interface MovieGridProps {
   movies: Movie[];
@@ -14,6 +15,33 @@ interface MovieGridProps {
 
 export function MovieGrid({ movies }: MovieGridProps) {
   const shouldScrollToTopOnPageChange = useRef(false);
+  const cols = useGridColumns();
+  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  const handleCardSelect = useCallback((id: string) => {
+    setSelectedCardId((prev) => (prev === id ? null : id));
+  }, []);
+
+  // Close panel on click outside the grid
+  useEffect(() => {
+    if (!selectedCardId) return;
+    const handleClick = (e: MouseEvent) => {
+      if (gridRef.current && !gridRef.current.contains(e.target as Node)) {
+        setSelectedCardId(null);
+      }
+    };
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedCardId(null);
+    };
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [selectedCardId]);
+
   const [typeFilter, setTypeFilter] = useState<
     "all" | "movie" | "series" | "top-rated" | "recently-watched" | "watchlist"
   >("all");
@@ -268,9 +296,16 @@ export function MovieGrid({ movies }: MovieGridProps) {
         <EmptyState message="No movies match your filters." />
       ) : (
         <>
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div ref={gridRef} className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" style={{ overflow: "visible" }}>
             {paginatedMovies.map((movie, index) => (
-              <MovieCard key={movie.id} movie={movie} index={index} />
+              <MovieCard
+                key={movie.id}
+                movie={movie}
+                index={index}
+                isSelected={selectedCardId === movie.id}
+                direction={getCardDirection(index, cols)}
+                onSelect={handleCardSelect}
+              />
             ))}
           </div>
 

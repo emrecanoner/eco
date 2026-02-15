@@ -1,29 +1,28 @@
 "use client";
 
-import { useState } from "react";
 import { Movie } from "@/lib/utils/types";
 import { Card } from "@/components/ui/Card";
-import { InlineMeta } from "@/components/ui/InlineMeta";
-import { RevealTruncatedText } from "@/components/ui/RevealTruncatedText";
+import { CardDetailPanel } from "@/components/ui/CardDetailPanel";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface MovieCardProps {
   movie: Movie;
   index: number;
+  isSelected: boolean;
+  direction: "left" | "right";
+  onSelect: (id: string) => void;
 }
 
-export function MovieCard({ movie, index }: MovieCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
+export function MovieCard({ movie, index, isSelected, direction, onSelect }: MovieCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className="relative"
+      onClick={() => onSelect(movie.id)}
+      className="relative cursor-pointer"
+      style={{ overflow: "visible" }}
     >
       <Card className="overflow-hidden p-0">
         {movie.poster && movie.poster.startsWith("http") ? (
@@ -33,30 +32,9 @@ export function MovieCard({ movie, index }: MovieCardProps) {
               alt={movie.title}
               fill
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              className="object-cover transition-transform duration-300"
-              style={{ transform: isHovered ? "scale(1.05)" : "scale(1)" }}
+              className="object-cover"
             />
-            <AnimatePresence>
-              {isHovered && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="absolute inset-0 bg-zinc-900/80"
-                >
-                  <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4">
-                    <h3 className="text-sm font-semibold text-white mb-2 sm:text-base">{movie.title}</h3>
-                    <InlineMeta left={movie.director} right={movie.year} />
-                    {movie.genre && movie.genre.length > 0 && (
-                      <div className="mt-1.5 text-[10px] text-zinc-400 sm:text-xs">
-                        <RevealTruncatedText text={movie.genre.join(", ")} direction="above" />
-                      </div>
-                    )}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-            {!isHovered && movie.rating > 0 && (
+            {!isSelected && movie.rating > 0 && (
               <div className="absolute right-2 top-2 rounded-full bg-black/80 px-2 py-1 text-xs font-bold text-white">
                 ⭐ {movie.rating.toFixed(1)}
               </div>
@@ -68,7 +46,25 @@ export function MovieCard({ movie, index }: MovieCardProps) {
           </div>
         )}
       </Card>
+
+      <div style={{ pointerEvents: isSelected ? "auto" : "none" }}>
+        <AnimatePresence>
+          {isSelected && (
+            <CardDetailPanel
+              direction={direction}
+              title={movie.title}
+              subtitle={movie.type === "series" ? "Series" : "Movie"}
+              rating={movie.rating}
+              details={[
+                { label: "Director", value: movie.director },
+                { label: "Year", value: movie.year },
+              ]}
+              genres={movie.genre}
+              onClose={() => onSelect(movie.id)}
+            />
+          )}
+        </AnimatePresence>
+      </div>
     </motion.div>
   );
 }
-
